@@ -1,0 +1,3 @@
+displayName = Weight Gain
+author = Foxascake
+version = 0.1

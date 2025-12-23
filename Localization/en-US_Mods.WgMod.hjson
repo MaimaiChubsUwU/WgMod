@@ -1,0 +1,31 @@
+Items: {
+	WeightManipulator: {
+		DisplayName: Weight Manipulator
+		Tooltip:
+			'''
+			Left Click to increase weight.
+			Right Click to decrease.
+			'''
+	}
+}
+
+Buffs: {
+	FatBuff: {
+		DisplayName: Fat
+		Description:
+			'''
+			You're an absolute unit!
+			Reduced mobility.
+			Increased defense by {0}.
+			'''
+	}
+
+	ImmobileBuff: {
+		DisplayName: Immobile
+		Description:
+			'''
+			You're so fat that you can't move anymore.
+			Increased defense by {0}.
+			'''
+	}
+}
