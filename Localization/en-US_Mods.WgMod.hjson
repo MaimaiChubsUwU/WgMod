@@ -37,7 +37,7 @@ Configs: {
 
 		DisableBuffs: {
 			Label: Disable Buffs
-			Tooltip: "Disables fat buffs and debuffs"
+			Tooltip: Disables fat buffs and debuffs
 		}
 	}
 }

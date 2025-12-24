@@ -15,13 +15,6 @@ namespace WgMod.Common.Players;
 
 public class WgPlayer : ModPlayer
 {
-    public static readonly Dictionary<int, float> BuffTable = new()
-    {
-        [BuffID.WellFed] = 1f,
-        [BuffID.WellFed2] = 3f,
-        [BuffID.WellFed3] = 6f
-    };
-
     // TODO: Show in UI
     public Weight Weight => _weight;
 
