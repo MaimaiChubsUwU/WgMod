@@ -14,19 +14,20 @@ Buffs: {
 		DisplayName: Fat
 		Description:
 			'''
-			You're an absolute unit!
-			Reduced mobility.
-			Increased defense by {0}.
+			Reduced movement speed by {0}%
+			Reduces damage taken by {1}%
 			'''
-	}
 
-	ImmobileBuff: {
-		DisplayName: Immobile
-		Description:
-			'''
-			You're so fat that you can't move anymore.
-			Increased defense by {0}.
-			'''
+		Stages: {
+			Name0: Regular
+			Name1: Chubby
+			Name2: Overweight
+			Name3: Fat
+			Name4: Obese
+			Name5: Morbidly obese
+			Name6: Barely mobile
+			Name7: Immobile
+		}
 	}
 }
 

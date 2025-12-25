@@ -20,7 +20,7 @@ public readonly record struct Weight(float Mass)
 
     public override readonly string ToString() => $"{Mass} Kg";
     public readonly float ToPounds() => Mass * KgToPounds;
-    public readonly int GetStage() => (int)Math.Floor(Immobility * ImmobileStage);
+    public readonly int GetStage() => (int)MathF.Floor(Immobility * ImmobileStage);
 
     public readonly float GetStageFactor()
     {

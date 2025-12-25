@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
-using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using WgMod.Common.Configs;
@@ -15,11 +13,12 @@ namespace WgMod.Common.Players;
 
 public class WgPlayer : ModPlayer
 {
-    // TODO: Show in UI
     public Weight Weight => _weight;
 
-    private Weight _weight;
-    private Vector2 _prevVel;
+    internal float _movementFactor;
+
+    Weight _weight;
+    Vector2 _prevVel;
 
     public override void Initialize()
     {
@@ -74,37 +73,24 @@ public class WgPlayer : ModPlayer
 
     public override void PostUpdateRunSpeeds()
     {
-        if (Player.mount.Active || ModContent.GetInstance<WgServerConfig>().DisableBuffs)
+        if (ModContent.GetInstance<WgServerConfig>().DisableBuffs || Player.mount.Active)
             return;
-        float factor = _weight.ClampedImmobility;
-        factor = 1f - factor * factor;
-        Player.runAcceleration *= factor;
-        Player.maxRunSpeed *= factor;
-        Player.accRunSpeed *= factor;
+        Player.runAcceleration *= _movementFactor;
+        Player.maxRunSpeed *= _movementFactor;
+        Player.accRunSpeed *= _movementFactor;
     }
 
     public override void PreUpdateBuffs()
     {
-        if (ModContent.GetInstance<WgServerConfig>().DisableBuffs)
-        {
-            SetBuff<ImmobileBuff>(false);
-            SetBuff<FatBuff>(false);
-            return;
-        }
-        int stage = _weight.GetStage();
-        bool immobile = stage >= Weight.ImmobileStage;
-        SetBuff<ImmobileBuff>(immobile);
-        SetBuff<FatBuff>(stage >= Weight.BuffStage && !immobile);
+        int type = ModContent.BuffType<FatBuff>();
+        if (!Player.HasBuff(type))
+            Player.AddBuff(type, 60);
     }
 
-    void SetBuff<T>(bool set) where T : ModBuff
+    public override void PostUpdateBuffs()
     {
-        int type = ModContent.BuffType<T>();
-        bool has = Player.HasBuff(type);
-        if (set && !has)
-            Player.AddBuff(type, 60);
-        else if (!set && has)
-            Player.ClearBuff(type);
+        if (_movementFactor < 0.01f)
+            Player.jumpSpeedBoost = -4f;
     }
 
     public override void PreUpdateMovement()

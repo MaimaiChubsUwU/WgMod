@@ -7,10 +7,9 @@ Very early proof of concept weight gain mod for tModLoader. Contributions are ve
 
 # Features
 - Basic weight gain mechanics
-- Food items affect weight based on their tier (no digestion yet)
+- Food items affect weight directly based on their tier (no digestion yet)
 - Weight manipulator item (subject to change)
-- 2 Buffs (fat, immobile)
-- Movement debuffs
+- Granular movement speed and damage reduction
 
 # Installation
 Currently there are no pre-packaged binaries. [See the thread](https://forum.weightgaming.com/t/terraria-weight-gain-mod-proof-of-concept)
