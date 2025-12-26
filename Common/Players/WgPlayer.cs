@@ -96,8 +96,8 @@ public class WgPlayer : ModPlayer
     public override void PreUpdateMovement()
     {
         float factor = MathF.Abs(Player.velocity.X);
-        factor += MathF.Abs(Player.velocity.X - _prevVel.X) * 40f;
-        factor *= 0.001f;
+        factor += MathF.Abs(Player.velocity.X - _prevVel.X) * 30f;
+        factor *= 0.0002f;
 
         SetWeight(_weight - factor);
         _prevVel = Player.velocity;
