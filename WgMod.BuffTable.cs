@@ -4,7 +4,7 @@ namespace WgMod;
 
 partial class WgMod
 {
-    static GainOptions GainOverTime(float totalGain, float gulpDuration) => new(totalGain, gulpDuration);
+    static GainOptions GainOverTime(float totalGain, float totalTime) => new(totalGain, totalTime);
 
     void RegisterBuffs()
     {
