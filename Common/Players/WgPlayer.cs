@@ -200,11 +200,14 @@ public class WgPlayer : ModPlayer
         // Couldn't think of a better solution
         int stage = Weight.GetStage();
         int armStage = WeightValues.GetArmStage(stage);
-        Texture2D armTexture = WgArms.ArmTextures[armStage].Value;
-        foreach (ref DrawData data in CollectionsMarshal.AsSpan(drawInfo.DrawDataCache))
+        if (armStage >= 0)
         {
-            if (data.texture == armTexture)
-                data.color = drawInfo.colorBodySkin;
+            Texture2D armTexture = WgArms.ArmTextures[armStage].Value;
+            foreach (ref DrawData data in CollectionsMarshal.AsSpan(drawInfo.DrawDataCache))
+            {
+                if (data.texture == armTexture)
+                    data.color = drawInfo.colorBodySkin;
+            }
         }
     }
 
