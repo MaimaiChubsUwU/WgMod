@@ -22,6 +22,7 @@ public class WgPlayer : ModPlayer
     internal float _buffTotalGain;
     internal float _movementFactor;
 
+    internal float _squishRest = 1f;
     internal float _squishPos = 1f;
     internal float _squishVel;
     internal float _bellyOffset;
@@ -118,6 +119,7 @@ public class WgPlayer : ModPlayer
     {
         Vector2 acc = Player.velocity - _prevVel;
         _prevVel = Player.velocity;
+        _squishRest = 1f;
 
         // Weight loss
         float factor = MathF.Abs(Player.velocity.X);
@@ -140,6 +142,8 @@ public class WgPlayer : ModPlayer
                 Player.width = targetWidth;
                 Player.position.X = targetX;
             }
+            else
+                _squishRest = 1.25f;
         }
 
         // Ice break
@@ -175,7 +179,7 @@ public class WgPlayer : ModPlayer
             _squishPos += MathF.Abs(vel.X) * 0.005f;
             _squishPos += vel.Y * 0.005f;
 
-            _squishVel += (1f - _squishPos) * 400f * dt;
+            _squishVel += (_squishRest - _squishPos) * 400f * dt;
             _squishVel = float.Lerp(_squishVel, 0f, 1f - MathF.Exp(-6f * dt));
             _squishPos += _squishVel * dt;
             _squishPos = Math.Clamp(_squishPos, 0.5f, 1.5f);

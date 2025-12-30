@@ -62,13 +62,17 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
         }
         wg._bellyOffset = offset;
 
-        float baseSquish = (wg._squishPos + 1f) * 0.5f;
+        Color skinColor = drawInfo.colorBodySkin; //drawInfo.drawPlayer.GetImmuneAlphaPure(drawInfo.drawPlayer.skinColor, drawInfo.shadow);
+        float t = wg.Weight.ClampedImmobility;
+        float bellySquish = float.Lerp(wg._squishPos, 1f, t * t * 0.4f);
+        float baseSquish = (bellySquish + 1f) * 0.5f;
+        
         Rectangle baseFrame = _baseTexture.Frame(1, Weight.StageCount, 0, stage);
         drawInfo.DrawDataCache.Add(new DrawData(
             _baseTexture.Value,
             PrepPos(position + new Vector2(0f, MathF.Round(MathF.Abs(offset) / 2f)) * -2f),
             baseFrame,
-            drawInfo.colorBodySkin,
+            skinColor,
             0f,
             baseFrame.Size() * 0.5f,
             new Vector2(1f * baseSquish, 1f / baseSquish),
@@ -80,10 +84,10 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
             _bellyTexture.Value, // The texture to render.
             PrepPos(position + new Vector2(0f, MathF.Round(offset / 2f) * 2f)), // Position to render at.
             bellyFrame, // Source rectangle.
-            drawInfo.colorBodySkin, // Color.
+            skinColor, // Color.
             0f, // Rotation.
             bellyFrame.Size() * 0.5f, // Origin. Uses the texture's center.
-            new Vector2(1f / wg._squishPos, 1f * wg._squishPos), // Scale.
+            new Vector2(1f / bellySquish, 1f * bellySquish), // Scale.
             drawInfo.playerEffect
         ));
     }

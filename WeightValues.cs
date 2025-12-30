@@ -24,9 +24,8 @@ public static class WeightValues
     // TODO
     public static float DrawOffsetX(int stage) => stage switch
     {
-        6 => 1f * 2f,
-        7 => 1f * 2f,
-        _ => 0f
+        7 => 3f * 2f,
+        _ => 2f * 2f
     };
 
     public static float DrawOffsetY(int stage) => stage switch
