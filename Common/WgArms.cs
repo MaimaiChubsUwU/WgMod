@@ -13,15 +13,6 @@ public static class WgArms
     public static readonly Asset<Texture2D>[] ArmTextures = new Asset<Texture2D>[ArmStageCount];
 
     public static string GetArmName(int armStage) => "Arms" + armStage;
-    public static int GetArmStage(int fatStage) => fatStage switch
-    {
-        3 => 0,
-        4 => 0,
-        5 => 1,
-        6 => 1,
-        7 => 1,
-        _ => -1
-    };
 
     public static void Load(Mod mod)
     {

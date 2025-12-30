@@ -129,7 +129,7 @@ public class WgPlayer : ModPlayer
         int stage = Weight.GetStage();
         int targetWidth = Player.defaultWidth;
         if (!ModContent.GetInstance<WgServerConfig>().DisableFatHitbox)
-            targetWidth = GetHitboxWidthInTiles(stage) * 16 - 12;
+            targetWidth = WeightValues.GetHitboxWidthInTiles(stage) * 16 - 12;
         if (Player.width != targetWidth)
         {
             float centerX = Player.position.X + Player.width * 0.5f;
@@ -185,21 +185,21 @@ public class WgPlayer : ModPlayer
     public override void FrameEffects()
     {
         int stage = Weight.GetStage();
-        int armStage = WgArms.GetArmStage(stage);
+        int armStage = WeightValues.GetArmStage(stage);
         if (armStage >= 0)
             Player.body = WgArms.GetArmEquipSlot(Mod, armStage);
     }
 
     public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
     {
-        drawInfo.Position.Y -= WgPlayerDrawLayer.CalculateOffsetY(Weight);
+        drawInfo.Position.Y -= WeightValues.DrawOffsetY(Weight.GetStage());
     }
     
     public override void TransformDrawData(ref PlayerDrawSet drawInfo)
     {
         // Couldn't think of a better solution
         int stage = Weight.GetStage();
-        int armStage = WgArms.GetArmStage(stage);
+        int armStage = WeightValues.GetArmStage(stage);
         Texture2D armTexture = WgArms.ArmTextures[armStage].Value;
         foreach (ref DrawData data in CollectionsMarshal.AsSpan(drawInfo.DrawDataCache))
         {
@@ -207,15 +207,6 @@ public class WgPlayer : ModPlayer
                 data.color = drawInfo.colorBodySkin;
         }
     }
-
-    public static int GetHitboxWidthInTiles(int stage) => stage switch
-    {
-        4 => 3,
-        5 => 4,
-        6 => 5,
-        7 => 6,
-        _ => 2,
-    };
 
     // Taken from CheckIceBreak() in Player.cs
     void ThinIceBreak()

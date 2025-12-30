@@ -40,9 +40,9 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
 
         Vector2 position = drawInfo.Center - Main.screenPosition;
         if ((drawInfo.playerEffect & SpriteEffects.FlipHorizontally) != 0)
-            position.X -= CalculateOffsetX(wg.Weight);
+            position.X -= WeightValues.DrawOffsetX(stage);
         else
-            position.X += CalculateOffsetX(wg.Weight);
+            position.X += WeightValues.DrawOffsetX(stage);
 
         Rectangle legFrame = drawInfo.drawPlayer.legFrame;
         int frame = legFrame.Y / legFrame.Height;
@@ -85,21 +85,6 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
             drawInfo.playerEffect
         ));
     }
-
-    // TODO
-    public static float CalculateOffsetX(Weight weight) => weight.GetStage() switch
-    {
-        6 => 1f * 2f,
-        7 => 1f * 2f,
-        _ => 0f
-    };
-
-    public static float CalculateOffsetY(Weight weight) => weight.GetStage() switch
-    {
-        6 => 3f * 2f,
-        7 => 8f * 2f,
-        _ => 0f
-    };
 
     static Vector2 PrepPos(Vector2 pos)
     {
