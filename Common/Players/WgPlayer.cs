@@ -1,6 +1,8 @@
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -191,7 +193,19 @@ public class WgPlayer : ModPlayer
     public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
     {
         drawInfo.Position.Y -= WgPlayerDrawLayer.CalculateOffsetY(Weight);
-        drawInfo.backShoulderOffset.X += 32f;
+    }
+    
+    public override void TransformDrawData(ref PlayerDrawSet drawInfo)
+    {
+        // Couldn't think of a better solution
+        int stage = Weight.GetStage();
+        int armStage = WgArms.GetArmStage(stage);
+        Texture2D armTexture = WgArms.ArmTextures[armStage].Value;
+        foreach (ref DrawData data in CollectionsMarshal.AsSpan(drawInfo.DrawDataCache))
+        {
+            if (data.texture == armTexture)
+                data.color = drawInfo.colorBodySkin;
+        }
     }
 
     public static int GetHitboxWidthInTiles(int stage) => stage switch

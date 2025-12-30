@@ -48,7 +48,7 @@ Configs: {
 
 		DisableFatHitbox: {
 			Label: Disable Fat Hitbox
-			Tooltip: "Disables player hitbox size changes"
+			Tooltip: Disables player hitbox size changes
 		}
 	}
 
