@@ -28,6 +28,8 @@ public class WgPlayer : ModPlayer
     internal float _bellyOffset;
 
     internal int _iceBreakTimer;
+
+    float _lastGfxOffY;
     Vector2 _prevVel;
 
     public override void Load()
@@ -155,12 +157,17 @@ public class WgPlayer : ModPlayer
                 if (_iceBreakTimer == IceBreakTime / 2)
                     SoundEngine.PlaySound(SoundID.Item127);
                 _iceBreakTimer++;
-                if (_iceBreakTimer >  IceBreakTime)
+                if (_iceBreakTimer > IceBreakTime)
                     ThinIceBreak();
             }
             else
                 _iceBreakTimer = 0;
         }
+    }
+
+    public override void PreUpdate()
+    {
+        Player.gfxOffY = _lastGfxOffY;
     }
 
     public override void PostUpdate()
@@ -184,6 +191,10 @@ public class WgPlayer : ModPlayer
             _squishPos += _squishVel * dt;
             _squishPos = Math.Clamp(_squishPos, 0.5f, 1.5f);
         }
+
+        // Can't find a better way to change the draw position
+        _lastGfxOffY = Player.gfxOffY;
+        Player.gfxOffY -= WeightValues.DrawOffsetY(Weight.GetStage());
     }
 
     public override void FrameEffects()
@@ -192,11 +203,6 @@ public class WgPlayer : ModPlayer
         int armStage = WeightValues.GetArmStage(stage);
         if (armStage >= 0)
             Player.body = WgArms.GetArmEquipSlot(Mod, armStage);
-    }
-
-    public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
-    {
-        drawInfo.Position.Y -= WeightValues.DrawOffsetY(Weight.GetStage());
     }
     
     public override void TransformDrawData(ref PlayerDrawSet drawInfo)
