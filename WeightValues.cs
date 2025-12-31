@@ -17,7 +17,7 @@ public static class WeightValues
         4 => 0,
         5 => 1,
         6 => 1,
-        7 => 1,
+        7 => 2,
         _ => -1
     };
 
@@ -30,7 +30,7 @@ public static class WeightValues
 
     public static float DrawOffsetY(int stage) => stage switch
     {
-        6 => 3f * 2f,
+        6 => 2f * 2f,
         7 => 8f * 2f,
         _ => 0f
     };

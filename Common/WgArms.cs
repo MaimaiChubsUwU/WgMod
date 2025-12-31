@@ -7,7 +7,7 @@ namespace WgMod.Common;
 
 public static class WgArms
 {
-    public const int ArmStageCount = 2;
+    public const int ArmStageCount = 3;
     public static readonly Asset<Texture2D>[] ArmTextures = new Asset<Texture2D>[ArmStageCount];
 
     public static string GetArmName(int armStage) => "Arms" + armStage;
