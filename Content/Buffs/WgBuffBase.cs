@@ -33,6 +33,6 @@ public abstract class WgBuffBase : ModBuff
 
     public virtual float GetProgress(WgPlayer wg, int buffIndex)
     {
-        return 1f - wg.Player.buffTime[buffIndex] / (float)wg.buffDuration[buffIndex];
+        return 1f - wg.Player.buffTime[buffIndex] / (float)wg.BuffDuration[buffIndex];
     }
 }

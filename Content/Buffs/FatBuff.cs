@@ -12,7 +12,6 @@ public class FatBuff : WgBuffBase
     public const float MaxDamageReduction = 0.1f;
     public const float MaxMeleeBoost = 0.1f;
 
-    float _movementFactor = 1f;
     float _damageReduction = 0f;
     float _meleeBoost = 0f;
 
@@ -28,14 +27,13 @@ public class FatBuff : WgBuffBase
         if (!Main.LocalPlayer.TryGetModPlayer(out WgPlayer wg))
             return;
         buffName = this.GetLocalizedValue("Stages.Name" + wg.Weight.GetStage());
-        tip = base.Description.Format(MathF.Round((1f - _movementFactor) * 100f), MathF.Round(_damageReduction * 100f), MathF.Round(_meleeBoost * 100f));
+        tip = base.Description.Format(MathF.Round((1f - wg._finalMovementFactor) * 100f), MathF.Round(_damageReduction * 100f), MathF.Round(_meleeBoost * 100f));
     }
 
     public override void Update(Player player, ref int buffIndex)
     {
         if (ModContent.GetInstance<WgServerConfig>().DisableFatBuffs || !player.TryGetModPlayer(out WgPlayer wg))
         {
-            _movementFactor = 1f;
             _damageReduction = 0f;
             _meleeBoost = 0f;
             return;
@@ -43,14 +41,6 @@ public class FatBuff : WgBuffBase
 
         // Calculate factors
         int stage = wg.Weight.GetStage();
-        if (stage < Weight.ImmobileStage)
-        {
-            float immobility = wg.Weight.ClampedImmobility;
-            _movementFactor = float.Lerp(1f, 0.3f, immobility * immobility);
-        }
-        else
-            _movementFactor = 0f;
-
         if (stage >= Weight.DamageReductionStage)
             _damageReduction = wg.Weight.GetClampedFactor(Weight.FromStage(Weight.DamageReductionStage), Weight.Immobile) * MaxDamageReduction;
         else
@@ -62,7 +52,6 @@ public class FatBuff : WgBuffBase
             _meleeBoost = 0f;
 
         // Apply factors
-        wg._movementFactor = _movementFactor;
         player.endurance += _damageReduction;
         player.GetDamage(DamageClass.Melee) += _meleeBoost;
     }

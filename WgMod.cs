@@ -70,7 +70,7 @@ public partial class WgMod : Mod
             return;
 
         int index = self.FindBuffIndex(type);
-        wg.buffDuration[index] = timeToAdd;
+        wg.BuffDuration[index] = timeToAdd;
         
         if (_buffTable.TryGetValue(type, out var gain))
         {
@@ -88,16 +88,16 @@ public partial class WgMod : Mod
     {
         if (self.TryGetModPlayer(out WgPlayer wg))
         {
-            wg.buffDuration[index] = 0;
+            wg.BuffDuration[index] = 0;
             int num = 0;
-            for (int i = 0; i < wg.buffDuration.Length - 1; i++)
+            for (int i = 0; i < wg.BuffDuration.Length - 1; i++)
             {
-                if (wg.buffDuration[i] != 0)
+                if (wg.BuffDuration[i] != 0)
                 {
                     if (num < i)
                     {
-                        wg.buffDuration[num] = wg.buffDuration[i];
-                        wg.buffDuration[i] = 0;
+                        wg.BuffDuration[num] = wg.BuffDuration[i];
+                        wg.BuffDuration[i] = 0;
                     }
                     num++;
                 }

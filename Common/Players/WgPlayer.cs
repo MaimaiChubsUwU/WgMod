@@ -16,17 +16,24 @@ namespace WgMod.Common.Players;
 
 public class WgPlayer : ModPlayer
 {
+    /// <summary> The player's weight </summary>
     public Weight Weight { get; private set; }
-    public readonly int[] buffDuration = new int[Player.MaxBuffs];
 
-    internal float _buffTotalGain;
-    internal float _movementFactor;
+    /// <summary> How much movement will be reduced because of the player's weight </summary>
+    public float MovementPenalty;
 
+    /// <summary> Multiplier to how fast the player will lose weight when walking </summary>
+    public float WeightLossMultiplier;
+
+    public readonly int[] BuffDuration = new int[Player.MaxBuffs];
+    
     internal float _squishRest = 1f;
     internal float _squishPos = 1f;
     internal float _squishVel;
     internal float _bellyOffset;
 
+    internal float _finalMovementFactor;
+    internal float _buffTotalGain;
     internal int _iceBreakTimer;
 
     float _lastGfxOffY;
@@ -95,26 +102,42 @@ public class WgPlayer : ModPlayer
             SoundEngine.PlaySound(new SoundStyle("WgMod/Assets/Sounds/Belly_", 3, SoundType.Sound));
     }
 
-    public override void PostUpdateRunSpeeds()
-    {
-        if (ModContent.GetInstance<WgServerConfig>().DisableFatBuffs || Player.mount.Active)
-            return;
-        Player.runAcceleration *= _movementFactor;
-        Player.maxRunSpeed *= _movementFactor;
-        Player.accRunSpeed *= _movementFactor;
-    }
-
     public override void PreUpdateBuffs()
     {
+        // Ensure fat buff
         int type = ModContent.BuffType<FatBuff>();
         if (!Player.HasBuff(type))
             Player.AddBuff(type, 60);
+
+        // Custom stats
+        int stage = Weight.GetStage();
+        if (stage < Weight.ImmobileStage)
+        {
+            float immobility = Weight.ClampedImmobility;
+            MovementPenalty = float.Lerp(0f, 0.7f, immobility * immobility);
+        }
+        else
+            MovementPenalty = 1f;
+        WeightLossMultiplier = 1f;
     }
 
     public override void PostUpdateBuffs()
     {
-        if (_movementFactor < 0.01f)
+        if (Weight.GetStage() >= Weight.ImmobileStage)
+        {
+            MovementPenalty = 1f;
             Player.jumpSpeedBoost = -4f;
+        }
+    }
+
+    public override void PostUpdateRunSpeeds()
+    {
+        if (ModContent.GetInstance<WgServerConfig>().DisableFatBuffs || Player.mount.Active)
+            return;
+        _finalMovementFactor = Math.Clamp(1f - MovementPenalty, 0f, 1f);
+        Player.runAcceleration *= _finalMovementFactor;
+        Player.maxRunSpeed *= _finalMovementFactor;
+        Player.accRunSpeed *= _finalMovementFactor;
     }
 
     public override void PreUpdateMovement()
@@ -125,9 +148,9 @@ public class WgPlayer : ModPlayer
 
         // Weight loss
         float factor = MathF.Abs(Player.velocity.X);
-        factor += MathF.Abs(acc.X) * 30f;
+        factor += MathF.Abs(acc.X) * 20f;
         factor *= 0.0002f;
-        SetWeight(Weight - factor);
+        SetWeight(Weight - factor * WeightLossMultiplier);
 
         // Hitbox
         int stage = Weight.GetStage();
