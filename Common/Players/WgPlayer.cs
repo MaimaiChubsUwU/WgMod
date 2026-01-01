@@ -124,20 +124,21 @@ public class WgPlayer : ModPlayer
     public override void PostUpdateBuffs()
     {
         if (Weight.GetStage() >= Weight.ImmobileStage)
-        {
             MovementPenalty = 1f;
-            Player.jumpSpeedBoost = -4f;
-        }
     }
 
     public override void PostUpdateRunSpeeds()
     {
         if (ModContent.GetInstance<WgServerConfig>().DisableFatBuffs || Player.mount.Active)
             return;
+
         _finalMovementFactor = Math.Clamp(1f - MovementPenalty, 0f, 1f);
         Player.runAcceleration *= _finalMovementFactor;
         Player.maxRunSpeed *= _finalMovementFactor;
         Player.accRunSpeed *= _finalMovementFactor;
+
+        if (Player.whoAmI == Main.myPlayer) // If it's the local player
+            Player.jumpSpeed = float.Lerp(Player.jumpSpeed * 0.2f, Player.jumpSpeed, _finalMovementFactor);
     }
 
     public override void PreUpdateMovement()
