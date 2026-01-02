@@ -7,6 +7,11 @@ Items: {
 			Right Click to decrease.
 			'''
 	}
+
+	Treadmill: {
+		DisplayName: Treadmill
+		Tooltip: Time to lose all that excess fat... maybe.
+	}
 }
 
 Buffs: {
@@ -64,3 +69,5 @@ Configs: {
 		}
 	}
 }
+
+Tiles.Treadmill.Items.Treadmill: Mods.WgMod.Tiles.Treadmill.Items.Treadmill
