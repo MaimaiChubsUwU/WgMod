@@ -4,7 +4,6 @@ using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.GameContent.ObjectInteractions;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 using WgMod.Common.Players;
@@ -13,7 +12,7 @@ namespace WgMod.Content.Tiles;
 
 public class Treadmill : ModTile
 {
-    public const float WeightLossMultiplier = 100f;
+    public const float WeightLoss = 80f;
     public const int NextStyleHeight = 38;
     
     public override void SetStaticDefaults()

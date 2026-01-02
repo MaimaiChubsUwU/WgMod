@@ -12,6 +12,34 @@ Items: {
 		DisplayName: Treadmill
 		Tooltip: Time to lose all that excess fat... maybe.
 	}
+
+	ExoskeletonLegs: {
+		DisplayName: Exoskeleton Legs
+		Tooltip:
+			'''
+			Allows flight
+			The wearer can run super fast
+			Reduces the movement penalty from high weights!
+			'''
+	}
+
+	TerraskeletonLegs: {
+		DisplayName: Terraskeleton Legs
+		Tooltip:
+			'''
+			Allows flight, super fast running, and extra mobility on ice
+			8% increased movement speed
+			Provides the ability to walk on water, honey & lava
+			Grants immunity to fire blocks and 7 seconds of immunity to lava
+			Reduces damage from touching lava
+			Reduces the movement penalty from high weights!
+			'''
+	}
+
+	WeightLossPendant: {
+		DisplayName: Weight Loss Pendant
+		Tooltip: Greatly increases the rate at which you lose weight!
+	}
 }
 
 Buffs: {
