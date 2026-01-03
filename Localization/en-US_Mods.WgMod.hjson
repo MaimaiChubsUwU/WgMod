@@ -9,8 +9,8 @@ Items: {
 	}
 
 	Treadmill: {
-		DisplayName: Treadmill
-		Tooltip: Time to lose all that excess fat... maybe.
+		DisplayName: Mods.WgMod.Items.Treadmill.DisplayName
+		Tooltip: ""
 	}
 
 	ExoskeletonLegs: {
@@ -40,6 +40,16 @@ Items: {
 		DisplayName: Weight Loss Pendant
 		Tooltip: Greatly increases the rate at which you lose weight!
 	}
+
+	FlaskOfAmbrosia: {
+		DisplayName: Flask Of Ambrosia
+		Tooltip:
+			'''
+			A powerful yet profoundly fattening drink
+			Increases your movement speed, acceleration, regeneration, and defense upon taking damage!
+			Effects scale with your obesity
+			'''
+	}
 }
 
 Buffs: {
@@ -68,6 +78,11 @@ Buffs: {
 	GainingBuff: {
 		DisplayName: Gaining
 		Description: Fattening over time
+	}
+
+	AmbrosiaGorged: {
+		Description: Your belly is laden with power
+		DisplayName: Ambrosia Gorged
 	}
 }
 

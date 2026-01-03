@@ -22,7 +22,7 @@ namespace WgMod.Content.Items.Accessories
             if (!player.TryGetModPlayer(out WgPlayer wg))
                 return;
             wg._ambrosiaOnHit = true;
-            wg.WeightLossMultiplier = +5f;
+            wg.WeightLossFactor = +5f;
         }
 
         public override void AddRecipes()

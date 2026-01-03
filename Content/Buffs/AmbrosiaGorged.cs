@@ -22,10 +22,10 @@ namespace WgMod.Content.Buffs
 
             float immobility = wg.Weight.ClampedImmobility;
 
-            player.moveSpeed *= float.Lerp(1.5f, 2f, immobility);
-            player.maxRunSpeed *= float.Lerp(1.5f, 2f, immobility);
-            player.runAcceleration *= float.Lerp(1.5f, 2f, immobility);
-            player.accRunSpeed *= float.Lerp(1.5f, 2f, immobility);
+            player.moveSpeed *= float.Lerp(1.25f, 1.5f, immobility);
+            player.maxRunSpeed *= float.Lerp(1.25f, 1.5f, immobility);
+            player.runAcceleration *= float.Lerp(1.25f, 1.5f, immobility);
+            player.accRunSpeed *= float.Lerp(1.25f, 1.5f, immobility);
             player.statDefense += (int)float.Lerp(1f, 10f, immobility);
             player.lifeRegen += (int)float.Lerp(1f, 5f, immobility);
         }
