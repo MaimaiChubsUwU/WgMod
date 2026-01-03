@@ -9,8 +9,8 @@ Items: {
 	}
 
 	Treadmill: {
-		DisplayName: Mods.WgMod.Items.Treadmill.DisplayName
-		Tooltip: ""
+		DisplayName: Treadmill
+		Tooltip: Time to lose all that excess fat... maybe.
 	}
 
 	ExoskeletonLegs: {
