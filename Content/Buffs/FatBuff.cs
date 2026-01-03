@@ -12,8 +12,12 @@ namespace WgMod.Content.Buffs;
 
 public class FatBuff : WgBuffBase
 {
+    public const int MaxLifeIncrease = 100;
+    public const float MaxLifeIncreasePercentage = 0.2f;
     public const float MaxDamageReduction = 0.05f;
+
     float _damageReduction = 0f;
+    int _lifeIncrease;
 
     Asset<Texture2D> _stagesTexture;
 
@@ -33,7 +37,7 @@ public class FatBuff : WgBuffBase
         if (ModContent.GetInstance<WgServerConfig>().DisableFatBuffs)
             tip = this.GetLocalizedValue("DisabledBuffs");
         else
-            tip = base.Description.Format(MathF.Round((1f - wg._finalMovementFactor) * 100f), MathF.Round(_damageReduction * 100f));
+            tip = base.Description.Format(MathF.Round((1f - wg._finalMovementFactor) * 100f), MathF.Round(_damageReduction * 100f), _lifeIncrease);
     }
 
     public override void Update(Player player, ref int buffIndex)
@@ -41,6 +45,7 @@ public class FatBuff : WgBuffBase
         if (ModContent.GetInstance<WgServerConfig>().DisableFatBuffs || !player.TryGetModPlayer(out WgPlayer wg))
         {
             _damageReduction = 0f;
+            _lifeIncrease = 0;
             return;
         }
 
@@ -51,8 +56,18 @@ public class FatBuff : WgBuffBase
         else
             _damageReduction = 0f;
 
+        if (stage >= Weight.HeavyStage)
+        {
+            float t = wg.Weight.GetClampedFactor(Weight.FromStage(Weight.HeavyStage), Weight.Immobile) * MaxLifeIncreasePercentage;
+            _lifeIncrease = (int)MathF.Floor(player.statLifeMax * t / 5f) * 5;
+            _lifeIncrease = Math.Clamp(_lifeIncrease, 0, MaxLifeIncrease);
+        }
+        else
+            _lifeIncrease = 0;
+
         // Apply factors
         player.endurance += _damageReduction;
+        player.statLifeMax2 += _lifeIncrease;
     }
 
     public override bool PreDraw(SpriteBatch spriteBatch, int buffIndex, ref BuffDrawParams drawParams)
