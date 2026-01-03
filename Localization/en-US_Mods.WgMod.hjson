@@ -59,7 +59,6 @@ Buffs: {
 			'''
 			Reduced movement speed by {0}%
 			Reduces damage taken by {1}%
-			Increased melee damage by {2}%
 			'''
 		DisabledBuffs: Fat buffs and debuffs disabled
 
