@@ -20,11 +20,11 @@ public class WgPlayer : ModPlayer
     /// <summary> The player's weight </summary>
     public Weight Weight { get; private set; }
 
-    /// <summary> How much movement will be reduced because of the player's weight, multiply this number </summary>
-    public float MovementPenalty;
+    /// <summary> How much movement will be reduced because of the player's weight, multiply this </summary>
+    public StatModifier MovementPenalty;
 
-    /// <summary> How fast the player will lose weight when walking, add or subtract to this number </summary>
-    public float WeightLossFactor;
+    /// <summary> How fast the player will lose weight when walking, add or subtract to this </summary>
+    public StatModifier WeightLossFactor;
 
     public readonly int[] BuffDuration = new int[Player.MaxBuffs];
 
@@ -115,21 +115,8 @@ public class WgPlayer : ModPlayer
             Player.AddBuff(type, 60);
 
         // Custom stats
-        int stage = Weight.GetStage();
-        if (stage < Weight.ImmobileStage)
-        {
-            float immobility = Weight.ClampedImmobility;
-            MovementPenalty = float.Lerp(0f, 0.7f, immobility * immobility);
-        }
-        else
-            MovementPenalty = 1f;
-        WeightLossFactor = 1f;
-    }
-
-    public override void PostUpdateBuffs()
-    {
-        if (Weight.GetStage() >= Weight.ImmobileStage)
-            MovementPenalty = 1f;
+        MovementPenalty = StatModifier.Default;
+        WeightLossFactor = StatModifier.Default;
     }
 
     public override void PostUpdateRunSpeeds()
@@ -137,7 +124,17 @@ public class WgPlayer : ModPlayer
         if (ModContent.GetInstance<WgServerConfig>().DisableFatBuffs || Player.mount.Active)
             return;
 
-        _finalMovementFactor = Math.Clamp(1f - MovementPenalty, 0f, 1f);
+        float basePenalty;
+        int stage = Weight.GetStage();
+        if (stage < Weight.ImmobileStage)
+        {
+            float immobility = Weight.ClampedImmobility;
+            basePenalty = float.Lerp(0f, 0.7f, immobility * immobility);
+        }
+        else
+            basePenalty = 1f;
+        _finalMovementFactor = Math.Clamp(1f - MovementPenalty.ApplyTo(basePenalty), 0f, 1f);
+        
         Player.runAcceleration *= _finalMovementFactor;
         Player.maxRunSpeed *= _finalMovementFactor;
         Player.accRunSpeed *= _finalMovementFactor;
@@ -159,7 +156,7 @@ public class WgPlayer : ModPlayer
         float factor = MathF.Abs(Player.velocity.X);
         factor += MathF.Abs(acc.X) * 20f;
         factor *= 0.0002f;
-        SetWeight(Weight - factor * WeightLossFactor);
+        SetWeight(Weight - WeightLossFactor.ApplyTo(factor));
 
         // Hitbox
         int stage = Weight.GetStage();
