@@ -50,6 +50,17 @@ Items: {
 			Effects scale with your obesity
 			'''
 	}
+
+	QueenlyGluttony: {
+		DisplayName: Queenly Gluttony
+		Tooltip:
+			'''
+			Increases melee damage, critical strike chance, and armor penetration
+			Decreases melee speed
+			Melee attacks inflict pretty sparkle slime!
+			Effects scale with your obesity
+			'''
+	}
 }
 
 Buffs: {
@@ -81,8 +92,14 @@ Buffs: {
 	}
 
 	AmbrosiaGorged: {
-		Description: Your belly is laden with power
 		DisplayName: Ambrosia Gorged
+		Description:
+			'''
+			Your belly is laden with power
+			Increased movement speed by {0}%
+			Increased defense by {1}
+			Increased life regen by {2} per second
+			'''
 	}
 }
 
