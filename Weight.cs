@@ -15,7 +15,7 @@ public readonly record struct Weight(float Mass)
     public const int ImmobileStage = StageCount - 1;
 
     public const int DamageReductionStage = 2; // Stage at which damage reduction starts being applied
-    public const int HeavyStage = 3; // Stage at which thin ice breaks, melee buff starts being applied
+    public const int HeavyStage = 3; // Stage at which thin ice breaks, max life starts being increased
 
     public readonly float Immobility => GetFactor(Base, Immobile);
     public readonly float ClampedImmobility => GetClampedFactor(Base, Immobile);
