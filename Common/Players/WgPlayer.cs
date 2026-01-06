@@ -35,6 +35,7 @@ public class WgPlayer : ModPlayer
     internal float _squishPos = 1f;
     internal float _squishVel;
     internal float _bellyOffset;
+    internal int _lastBodySlot;
 
     internal float _finalMovementFactor;
     internal float _buffTotalGain;
@@ -229,6 +230,8 @@ public class WgPlayer : ModPlayer
 
         if (_onTreadmill)
             Player.Center = new Vector2(_treadmillX, Player.Center.Y);
+
+        _lastBodySlot = Player.body;
     }
 
     public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)

@@ -50,6 +50,11 @@ Items: {
 			Effects scale with your obesity
 			'''
 	}
+
+	FatArmorShader: {
+		DisplayName: Fat Armor Shader
+		Tooltip: ""
+	}
 }
 
 Buffs: {

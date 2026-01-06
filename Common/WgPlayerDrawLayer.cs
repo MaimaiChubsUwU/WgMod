@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent;
+using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
 using WgMod.Common.Players;
 
@@ -78,18 +80,35 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
             new Vector2(1f * baseSquish, 1f / baseSquish),
             drawInfo.playerEffect
         ));
-        
+
+        Vector2 bellyPos = PrepPos(position + new Vector2(0f, MathF.Round(offset / 2f) * 2f));
+        Vector2 bellyScale = new(1f / bellySquish, 1f * bellySquish);
         Rectangle bellyFrame = _bellyTexture.Frame(1, Weight.StageCount, 0, stage);
         drawInfo.DrawDataCache.Add(new DrawData(
             _bellyTexture.Value, // The texture to render.
-            PrepPos(position + new Vector2(0f, MathF.Round(offset / 2f) * 2f)), // Position to render at.
+            bellyPos, // Position to render at.
             bellyFrame, // Source rectangle.
             skinColor, // Color.
             0f, // Rotation.
             bellyFrame.Size() * 0.5f, // Origin. Uses the texture's center.
-            new Vector2(1f / bellySquish, 1f * bellySquish), // Scale.
+            bellyScale, // Scale.
             drawInfo.playerEffect
         ));
+
+        if (wg._lastBodySlot > 0 && drawInfo.usesCompositeTorso)
+        {
+            Texture2D texture = TextureAssets.ArmorBodyComposite[wg._lastBodySlot].Value;
+            drawInfo.DrawDataCache.Add(new DrawData(
+                texture,
+                bellyPos,
+                bellyFrame,
+                drawInfo.colorArmorBody,
+                0f,
+                bellyFrame.Size() * 0.5f,
+                bellyScale,
+                drawInfo.playerEffect
+            ) { shader = GameShaders.Armor.GetShaderIdFromItemId(ModContent.ItemType<FatArmorShader>()) });
+        }
     }
 
     static Vector2 PrepPos(Vector2 pos)
