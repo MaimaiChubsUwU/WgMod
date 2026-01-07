@@ -100,6 +100,15 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
             drawInfo.playerEffect
         );
         drawInfo.DrawDataCache.Add(baseDrawData);
+        if (wg._lastBodySlot > 0 && drawInfo.usesCompositeTorso)
+        {
+            drawInfo.DrawDataCache.Add(baseDrawData with
+            {
+                texture = TextureAssets.ArmorBodyComposite[wg._lastBodySlot].Value,
+                color = drawInfo.colorArmorBody,
+                shader = _baseArmorShader
+            });
+        }
 
         Rectangle bellyFrame = _bellyTexture.Frame(1, Weight.StageCount, 0, stage);
         DrawData bellyDrawData = new(
@@ -113,19 +122,11 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
             drawInfo.playerEffect
         );
         drawInfo.DrawDataCache.Add(bellyDrawData);
-        
         if (wg._lastBodySlot > 0 && drawInfo.usesCompositeTorso)
         {
-            Texture2D texture = TextureAssets.ArmorBodyComposite[wg._lastBodySlot].Value;
-            drawInfo.DrawDataCache.Add(baseDrawData with
-            {
-                texture = texture,
-                color = drawInfo.colorArmorBody,
-                shader = _baseArmorShader
-            });
             drawInfo.DrawDataCache.Add(bellyDrawData with
             {
-                texture = texture,
+                texture = TextureAssets.ArmorBodyComposite[wg._lastBodySlot].Value,
                 color = drawInfo.colorArmorBody,
                 shader = _bellyArmorShader
             });

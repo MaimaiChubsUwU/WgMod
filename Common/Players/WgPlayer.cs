@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.Graphics;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -243,6 +244,7 @@ public class WgPlayer : ModPlayer
             {
                 Player.body = WgArms.GetArmEquipSlot(Mod, armStage);
                 drawInfo.armorHidesArms = true;
+                drawInfo.armorHidesHands = true;
             }
         }
         if (_onTreadmill)
@@ -267,6 +269,8 @@ public class WgPlayer : ModPlayer
                     data.color = drawInfo.colorBodySkin;
             }
         }
+        if (drawInfo.shadow == 0f)
+            Player.body = _lastBodySlot;
     }
 
     // Taken from CheckIceBreak() in Player.cs
