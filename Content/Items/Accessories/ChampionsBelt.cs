@@ -5,12 +5,12 @@ using WgMod.Common.Players;
 
 namespace WgMod.Content.Items.Accessories;
 
-public class BottomlessAppetite : ModItem
+public class ChampionsBelt : ModItem
 {
     public override void SetDefaults()
     {
-        Item.width = 22;
-        Item.height = 22;
+        Item.width = 26;
+        Item.height = 32;
 
         Item.accessory = true;
         Item.rare = ItemRarityID.Red;
@@ -23,18 +23,18 @@ public class BottomlessAppetite : ModItem
             return;
         float immobility = wg.Weight.ClampedImmobility;
 
-        wg._bottomlessAppetite = true;
-        wg._bottomlessAppetiteGrabRange = (int)float.Lerp(2f, 9999f, immobility);
+        wg._championsBelt = true;
+        wg._championsBeltMeleeScale = (int)float.Lerp(1.25f, 2, immobility);
     }
 
     public override void AddRecipes()
     {
         CreateRecipe()
-            .AddIngredient(ItemID.FragmentSolar, 2)
-            .AddIngredient(ItemID.FragmentNebula, 2)
-            .AddIngredient(ItemID.FragmentVortex, 2)
-            .AddIngredient(ItemID.FragmentStardust, 2)
-            .AddTile(TileID.LunarCraftingStation)
+            .AddIngredient(ItemID.GoldBar, 6)
+            .AddIngredient(ItemID.Ruby, 2)
+            .AddIngredient(ItemID.Emerald, 2)
+            .AddIngredient(ItemID.Amethyst, 2)
+            .AddTile(TileID.Anvils)
             .Register();
     }
 }
