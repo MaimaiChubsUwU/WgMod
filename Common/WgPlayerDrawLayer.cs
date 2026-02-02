@@ -66,6 +66,8 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
             position.X += WeightValues.DrawOffsetX(stage);
         position.Y -= drawInfo.seatYOffset;
         position.Y += drawInfo.mountOffSet * 0.5f;
+        if (drawInfo.shadow != 0f)
+            position.Y -= WeightValues.DrawOffsetY(stage);
 
         Rectangle legFrame = drawInfo.drawPlayer.legFrame;
         int frame = legFrame.Y / legFrame.Height;
