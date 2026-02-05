@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.Graphics;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -31,6 +32,7 @@ public class WgPlayer : ModPlayer
     internal float _squishPos = 1f;
     internal float _squishVel;
     internal float _bellyOffset;
+    internal int _lastBodySlot;
 
     internal float _finalMovementFactor;
     internal float _buffTotalGain;
@@ -227,12 +229,17 @@ public class WgPlayer : ModPlayer
 
     public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
     {
-        int stage = Weight.GetStage();
-        int armStage = WeightValues.GetArmStage(stage);
-        if (armStage >= 0)
+        if (drawInfo.shadow == 0f)
         {
-            Player.body = WgArms.GetArmEquipSlot(Mod, armStage);
-            drawInfo.armorHidesArms = true;
+            _lastBodySlot = Player.body;
+            int stage = Weight.GetStage();
+            int armStage = WeightValues.GetArmStage(stage);
+            if (armStage >= 0)
+            {
+                Player.body = WgArms.GetArmEquipSlot(Mod, armStage);
+                drawInfo.armorHidesArms = true;
+                drawInfo.armorHidesHands = true;
+            }
         }
     }
 
@@ -250,6 +257,8 @@ public class WgPlayer : ModPlayer
                     data.color = drawInfo.colorBodySkin;
             }
         }
+        if (drawInfo.shadow == 0f)
+            Player.body = _lastBodySlot;
     }
 
     // Taken from CheckIceBreak() in Player.cs

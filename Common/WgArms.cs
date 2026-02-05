@@ -25,7 +25,11 @@ public static class WgArms
     public static void SetupDrawing(Mod mod)
     {
         for (int i = 0; i < ArmStageCount; i++)
-            ArmorIDs.Body.Sets.HidesArms[GetArmEquipSlot(mod, i)] = true;
+        {
+            int slot = GetArmEquipSlot(mod, i);
+            ArmorIDs.Body.Sets.HidesArms[slot] = true;
+            ArmorIDs.Body.Sets.HidesHands[slot] = true;
+        }
     }
 
     public static int GetArmEquipSlot(Mod mod, int armStage)
