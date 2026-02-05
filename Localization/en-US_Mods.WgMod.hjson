@@ -50,11 +50,6 @@ Items: {
 			Effects scale with your obesity
 			'''
 	}
-
-	FatArmorShader: {
-		DisplayName: Fat Armor Shader
-		Tooltip: ""
-	}
 }
 
 Buffs: {
@@ -118,7 +113,7 @@ Configs: {
 
 		DisableUVClothes: {
 			Label: Disable UV Clothes
-			Tooltip: "Disables dynamic armor and clothes feature"
+			Tooltip: Disables dynamic armor and clothes feature
 		}
 	}
 }
