@@ -12,7 +12,7 @@ using WgMod.Common.Players;
 
 namespace WgMod.Common;
 
-public class WgDrawLayer : PlayerDrawLayer
+public class WgPlayerDrawLayer : PlayerDrawLayer
 {
     // Better than having an item I suppose...
     public const int ShaderItemId = -1000;
