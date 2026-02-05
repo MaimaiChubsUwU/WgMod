@@ -69,7 +69,7 @@ public static class WgArmor
         {
             texture = wg._armorTarget,
             sourceRect = rect,
-            shader = drawInfo.cBody,
+            shader = wg._lastBodySlot > 0 ? drawInfo.cBody : 0,
             color = Color.White
         });
     }
