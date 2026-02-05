@@ -52,8 +52,8 @@ public class VacuumHelmet : ModItem
     {
         if (!player.TryGetModPlayer(out WgPlayer wg))
             return;
-        float immobility = wg.Weight.ClampedImmobility;
 
+        float immobility = wg.Weight.ClampedImmobility;
         _vacuumHelmetCritChance = float.Lerp(1.04f, 1.08f, immobility);
         _vacuumHelmetHealth = (int)MathF.Floor((int)float.Lerp(50, 100, immobility) / 5f) * 5;
         _vacuumHelmetDefense = (int)float.Lerp(6f, 12f, immobility);
@@ -69,16 +69,10 @@ public class VacuumHelmet : ModItem
         player.aggro += 5;
 
         if (!wg._vacuumSetBonus)
-        {
             return;
-        }
-        else
-        {
-            _vacuumSetBonusRegen = (int)float.Lerp(5f, 20f, immobility);
-
-            player.lifeRegen += _vacuumSetBonusRegen;
-            wg.WeightLossFactor *= 0.5f;
-        }
+        _vacuumSetBonusRegen = (int)float.Lerp(5f, 20f, immobility);
+        player.lifeRegen += _vacuumSetBonusRegen;
+        wg.WeightLossRate *= 0.5f;
     }
 
     public override void AddRecipes()

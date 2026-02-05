@@ -12,7 +12,7 @@ using WgMod.Common.Players;
 
 namespace WgMod.Common;
 
-public class WgPlayerDrawLayer : PlayerDrawLayer
+public class WgDrawLayer : PlayerDrawLayer
 {
     // Better than having an item I suppose...
     public const int ShaderItemId = -1000;
@@ -27,6 +27,7 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
 
     public override void SetStaticDefaults()
     {
+        // TODO: Render in a separate frame buffer so that we dont have to do this hacky thing, that way it would also be able to be affected by dyes that use shaders
         const string armorShaderPass = "MainPass";
         Asset<Effect> armorShader = Mod.Assets.Request<Effect>("Assets/Effects/FatArmor");
 
@@ -45,17 +46,16 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
         _bellyTexture = Mod.Assets.Request<Texture2D>("Assets/Textures/Belly");
     }
 
-    public override Position GetDefaultPosition() => new AfterParent(PlayerDrawLayers.Torso);
-
-    public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
-    {
-        return true;
-    }
+    // folly: What is OffhandAcc exactly???
+    public override Position GetDefaultPosition() => new Between(PlayerDrawLayers.Torso, PlayerDrawLayers.OffhandAcc);
+    public override bool GetDefaultVisibility(PlayerDrawSet drawInfo) => true;
 
     protected override void Draw(ref PlayerDrawSet drawInfo)
     {
-        if (!drawInfo.drawPlayer.TryGetModPlayer(out WgPlayer wg))
+        Player player = drawInfo.drawPlayer;
+        if (!player.TryGetModPlayer(out WgPlayer wg))
             return;
+
         int stage = wg.Weight.GetStage();
         if (stage == 0)
             return;
@@ -65,28 +65,30 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
             position.X -= WeightValues.DrawOffsetX(stage);
         else
             position.X += WeightValues.DrawOffsetX(stage);
-        position.Y -= drawInfo.seatYOffset;
-        position.Y += drawInfo.mountOffSet * 0.5f;
+        
+        float yOffset = 0f;
+        yOffset -= drawInfo.seatYOffset;
+        yOffset += drawInfo.mountOffSet * 0.5f;
         if (drawInfo.shadow != 0f)
-            position.Y -= WeightValues.DrawOffsetY(stage);
+            yOffset -= WeightValues.DrawOffsetY(stage);
 
-        Rectangle legFrame = drawInfo.drawPlayer.legFrame;
+        Rectangle legFrame = player.legFrame;
         int frame = legFrame.Y / legFrame.Height;
         // Frame [0] - Idle
         // Frame [5] - Jump
         // Frame [6 to 19] - Walk
 
-        float offset = 0f;
+        float animOffset = 0f;
         if (stage < Weight.ImmobileStage)
         {
             if (frame == 5)
-                offset = Math.Clamp(drawInfo.drawPlayer.velocity.Y / 4f, -1f, 1f) * -2f;
+                animOffset = Math.Clamp(player.velocity.Y * player.gravDir / 4f, -1f, 1f) * -2f;
             else if (frame >= 6 && frame <= 19)
-                offset = float.Lerp(2f, -2f, MathF.Sin((frame - 6) / 13f * MathF.Tau * 2f) * 0.5f + 0.5f);
+                animOffset = float.Lerp(2f, -2f, MathF.Sin((frame - 6) / 13f * MathF.Tau * 2f) * 0.5f + 0.5f);
         }
-        wg._bellyOffset = offset;
+        wg._bellyOffset = animOffset;
 
-        Color skinColor = drawInfo.colorBodySkin; //drawInfo.drawPlayer.GetImmuneAlphaPure(drawInfo.drawPlayer.skinColor, drawInfo.shadow);
+        Color skinColor = drawInfo.colorBodySkin; //player.GetImmuneAlphaPure(player.skinColor, drawInfo.shadow);
         float t = wg.Weight.ClampedImmobility;
         float bellySquish = float.Lerp(wg._squishPos, 1f, t * t * 0.4f);
         float baseSquish = (bellySquish + 1f) * 0.5f;
@@ -110,7 +112,7 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
         Rectangle baseFrame = _baseTexture.Frame(1, Weight.StageCount, 0, stage);
         DrawData baseDrawData = new(
             _baseTexture.Value,
-            PrepPos(position + new Vector2(0f, MathF.Round(MathF.Abs(offset) / 2f)) * -2f),
+            PrepPos(position, yOffset - MathF.Round(MathF.Abs(animOffset) / 2f) * 2f, player.gravDir),
             baseFrame,
             skinColor,
             0f,
@@ -125,7 +127,7 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
         Rectangle bellyFrame = _bellyTexture.Frame(1, Weight.StageCount, 0, stage);
         DrawData bellyDrawData = new(
             _bellyTexture.Value, // The texture to render.
-            PrepPos(position + new Vector2(0f, MathF.Round(offset / 2f) * 2f)), // Position to render at.
+            PrepPos(position, yOffset + MathF.Round(animOffset / 2f) * 2f, player.gravDir), // Position to render at.
             bellyFrame, // Source rectangle.
             skinColor, // Color.
             0f, // Rotation.
@@ -138,9 +140,9 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
         layer2.Draw(drawInfo, bellyDrawData, _bellyArmorShader);
     }
 
-    static Vector2 PrepPos(Vector2 pos)
+    static Vector2 PrepPos(Vector2 pos, float yOffset, float gravDir)
     {
-        pos.Y += 1f;
+        pos.Y += (1f + yOffset) * gravDir;
         return pos.Floor();
     }
 

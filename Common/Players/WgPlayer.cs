@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
-using Terraria.Graphics;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -24,7 +23,7 @@ public class WgPlayer : ModPlayer
     public StatModifier MovementPenalty;
 
     /// <summary> How fast the player will lose weight when walking, add or subtract to this </summary>
-    public StatModifier WeightLossFactor;
+    public StatModifier WeightLossRate;
 
     public readonly int[] BuffDuration = new int[Player.MaxBuffs];
 
@@ -37,13 +36,14 @@ public class WgPlayer : ModPlayer
     internal float _finalMovementFactor;
     internal float _buffTotalGain;
     internal int _iceBreakTimer;
+
     internal bool _ambrosiaOnHit; // FlaskOfAmbrosia effect
     internal bool _queenlyGluttony; // QueenlyGluttony effect
     internal bool _bottomlessAppetite; //BottomlessAppetite effect
     internal int _bottomlessAppetiteGrabRange; // How much BottomlessAppetite increases grab range
-    public bool _vacuumSetBonus;
-    public bool _championsBelt;
-    public float _championsBeltMeleeScale;
+    internal bool _vacuumSetBonus;
+    internal bool _championsBelt;
+    internal float _championsBeltMeleeScale;
 
     float _lastGfxOffY;
     Vector2 _prevVel;
@@ -117,10 +117,6 @@ public class WgPlayer : ModPlayer
         int type = ModContent.BuffType<FatBuff>();
         if (!Player.HasBuff(type))
             Player.AddBuff(type, 60);
-
-        // Custom stats
-        MovementPenalty = StatModifier.Default;
-        WeightLossFactor = StatModifier.Default;
     }
 
     public override void PostUpdateRunSpeeds()
@@ -157,7 +153,7 @@ public class WgPlayer : ModPlayer
         float factor = MathF.Abs(Player.velocity.X);
         factor += MathF.Abs(acc.X) * 20f;
         factor *= 0.0002f;
-        SetWeight(Weight - WeightLossFactor.ApplyTo(factor));
+        SetWeight(Weight - WeightLossRate.ApplyTo(factor));
 
         // Hitbox
         int stage = Weight.GetStage();
@@ -227,6 +223,19 @@ public class WgPlayer : ModPlayer
         Player.gfxOffY -= WeightValues.DrawOffsetY(Weight.GetStage());
     }
 
+    public override void HideDrawLayers(PlayerDrawSet drawInfo)
+    {
+        int stage = Weight.GetStage();
+        if (stage >= 5)
+        {
+            foreach (PlayerDrawLayer drawLayer in PlayerDrawLayerLoader.Layers)
+            {
+                if (drawLayer == PlayerDrawLayers.Skin || drawLayer == PlayerDrawLayers.Torso || drawLayer == PlayerDrawLayers.Leggings)
+                    drawLayer.Hide();
+            }
+        }
+    }
+
     public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
     {
         if (drawInfo.shadow == 0f)
@@ -245,7 +254,7 @@ public class WgPlayer : ModPlayer
 
     public override void TransformDrawData(ref PlayerDrawSet drawInfo)
     {
-        // Couldn't think of a better solution
+        // Sticking with this for now...
         int stage = Weight.GetStage();
         int armStage = WeightValues.GetArmStage(stage);
         if (armStage >= 0)
@@ -254,7 +263,10 @@ public class WgPlayer : ModPlayer
             foreach (ref DrawData data in CollectionsMarshal.AsSpan(drawInfo.DrawDataCache))
             {
                 if (data.texture == armTexture)
+                {
                     data.color = drawInfo.colorBodySkin;
+                    data.shader = 0;
+                }
             }
         }
         if (drawInfo.shadow == 0f)
@@ -309,6 +321,10 @@ public class WgPlayer : ModPlayer
         _queenlyGluttony = false;
         _bottomlessAppetite = false;
         _championsBelt = false;
+
+        // Custom stats
+        MovementPenalty = StatModifier.Default;
+        WeightLossRate = StatModifier.Default;
     }
 
     public override void OnHurt(Player.HurtInfo info)

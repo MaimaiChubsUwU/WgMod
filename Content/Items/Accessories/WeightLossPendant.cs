@@ -21,6 +21,6 @@ public class WeightLossPendant : ModItem
     {
         if (!player.TryGetModPlayer(out WgPlayer wg))
             return;
-        wg.WeightLossFactor += 5f;
+        wg.WeightLossRate += 5f;
     }
 }

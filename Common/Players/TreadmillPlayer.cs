@@ -14,7 +14,7 @@ public class TreadmillPlayer : ModPlayer
     public override void PostUpdateBuffs()
     {
         if (_onTreadmill && Player.TryGetModPlayer(out WgPlayer wg))
-            wg.WeightLossFactor += Treadmill.WeightLoss;
+            wg.WeightLossRate += Treadmill.WeightLoss;
     }
 
     public override void PreUpdate()

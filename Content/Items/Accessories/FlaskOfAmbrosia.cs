@@ -22,7 +22,7 @@ public class FlaskOfAmbrosia : ModItem
         if (!player.TryGetModPlayer(out WgPlayer wg))
             return;
         wg._ambrosiaOnHit = true;
-        wg.WeightLossFactor += 2f;
+        wg.WeightLossRate += 2f;
     }
 
     public override void AddRecipes()

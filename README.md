@@ -2,7 +2,7 @@
 Fetish. Don't like that stuff? Then don't look at it, silly :3
 
 # Wg Terraria Mod
-[![](https://dcbadge.limes.pink/api/server/32gm9vgKv4)](https://discord.gg/32gm9vgKv4)
+[![](https://dcbadge.limes.pink/api/server/32gm9vgKv4?style=flat)](https://discord.gg/32gm9vgKv4)
 
 ![logo](icon.png)
 
@@ -15,10 +15,11 @@ Very early weight gain mod for tModLoader.
 - Basic weight gain mechanics
 - Food items and obtaining different buffs affect weight
 - Treadmill for quickly losing weight
+- Dynamic clothing
 
 # Optional features
 These are turned on by default but can be turned off in the mod's settings
-- Granular movement speed and damage reduction
+- Granular movement speed decrease and damage reduction
 - Player hitbox size increase
 - Basic jiggle physics
 
