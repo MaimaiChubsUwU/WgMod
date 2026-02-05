@@ -22,7 +22,6 @@ public class ChampionsBelt : ModItem
         if (!player.TryGetModPlayer(out WgPlayer wg))
             return;
         float immobility = wg.Weight.ClampedImmobility;
-
         wg._championsBelt = true;
         wg._championsBeltMeleeScale = (int)float.Lerp(1.25f, 2, immobility);
     }

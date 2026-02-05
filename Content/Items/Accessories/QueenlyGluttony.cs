@@ -26,8 +26,8 @@ public class QueenlyGluttony : ModItem
     {
         if (!player.TryGetModPlayer(out WgPlayer wg))
             return;
-        float immobility = wg.Weight.ClampedImmobility;
 
+        float immobility = wg.Weight.ClampedImmobility;
         _queenlyGluttonyDamage = float.Lerp(0.05f, 0.2f, immobility);
         _queenlyGluttonyAttackSpeed = float.Lerp(0.96f, 0.85f, immobility);
         _queenlyGluttonyCritChance = (int)float.Lerp(5f, 10f, immobility);
@@ -146,3 +146,5 @@ public class QueenlyGluttony : ModItem
 //                                                                                     *##%#%#%#####*
 //                                                                                     *%########%##*
 //                                                                                     *%@######%%
+
+// folly: awesome!

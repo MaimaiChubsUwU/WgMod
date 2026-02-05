@@ -26,7 +26,7 @@ public partial class WgMod : Mod
     static readonly Dictionary<int, GainOptions> _buffTable = [];
 
     // Vanilla
-    void AddBuffs((int id, GainOptions gain)[] table)
+    static void AddBuffs((int id, GainOptions gain)[] table)
     {
         foreach (var (id, gain) in table)
             _buffTable[id] = gain;
@@ -53,10 +53,10 @@ public partial class WgMod : Mod
         RegisterBuffs();
         On_Player.AddBuff += OnPlayerAddBuff;
         On_Player.DelBuff += OnPlayerDelBuff;
+        On_Mount.Draw += OnMountDraw;
 
         On_PlayerSittingHelper.UpdateSitting += OnUpdateSitting;
-        On_Mount.Draw += OnMountDraw;
-        On_Player.GetItemGrabRange += On_Player_GetItemGrabRange;
+        On_Player.GetItemGrabRange += OnGetItemGrabRange;
     }
 
     public override void Unload()
@@ -64,16 +64,12 @@ public partial class WgMod : Mod
         On_Player.AddBuff -= OnPlayerAddBuff;
         On_Player.DelBuff -= OnPlayerDelBuff;
         On_Mount.Draw -= OnMountDraw;
+
+        On_PlayerSittingHelper.UpdateSitting -= OnUpdateSitting;
+        On_Player.GetItemGrabRange -= OnGetItemGrabRange;
     }
 
-    public static void OnPlayerAddBuff(
-        On_Player.orig_AddBuff orig,
-        Player self,
-        int type,
-        int timeToAdd,
-        bool quiet,
-        bool foodHack
-    )
+    public static void OnPlayerAddBuff(On_Player.orig_AddBuff orig, Player self, int type, int timeToAdd, bool quiet, bool foodHack)
     {
         if (!self.TryGetModPlayer(out WgPlayer wg))
         {
@@ -125,11 +121,7 @@ public partial class WgMod : Mod
         orig(self, index);
     }
 
-    public static void OnUpdateSitting(
-        On_PlayerSittingHelper.orig_UpdateSitting orig,
-        ref PlayerSittingHelper self,
-        Player player
-    )
+    public static void OnUpdateSitting(On_PlayerSittingHelper.orig_UpdateSitting orig, ref PlayerSittingHelper self, Player player)
     {
         if (!player.TryGetModPlayer(out TreadmillPlayer tp) || !tp._onTreadmill)
         {
@@ -145,17 +137,7 @@ public partial class WgMod : Mod
         player.controlRight = right;
     }
 
-    public static void OnMountDraw(
-        On_Mount.orig_Draw orig,
-        Mount self,
-        List<DrawData> playerDrawData,
-        int drawType,
-        Player drawPlayer,
-        Vector2 Position,
-        Color drawColor,
-        SpriteEffects playerEffect,
-        float shadow
-    )
+    public static void OnMountDraw(On_Mount.orig_Draw orig, Mount self, List<DrawData> playerDrawData, int drawType, Player drawPlayer, Vector2 Position, Color drawColor, SpriteEffects playerEffect, float shadow)
     {
         if (drawPlayer.TryGetModPlayer(out WgPlayer wg) && self.Active)
             Position.Y += WeightValues.DrawOffsetY(wg.Weight.GetStage());
@@ -163,7 +145,7 @@ public partial class WgMod : Mod
     }
 
     // This is needed for BottomlessAppetite item pickup range changes!
-    public static int On_Player_GetItemGrabRange(On_Player.orig_GetItemGrabRange orig, Player self, Item item)
+    public static int OnGetItemGrabRange(On_Player.orig_GetItemGrabRange orig, Player self, Item item)
     {
         int num = Player.defaultItemGrabRange;
         if (self.goldRing && item.IsACoin)
@@ -180,14 +162,12 @@ public partial class WgMod : Mod
             num += 50;
         if (ItemID.Sets.NebulaPickup[item.type])
             num += 100;
-        if (self.difficulty == (byte)3 && CreativePowerManager.Instance.GetPower<CreativePowers.FarPlacementRangePower>().IsEnabledForPlayer(self.whoAmI))
+        if (self.difficulty == PlayerDifficultyID.Creative && CreativePowerManager.Instance.GetPower<CreativePowers.FarPlacementRangePower>().IsEnabledForPlayer(self.whoAmI))
             num += 240;
         if (self.TryGetModPlayer(out WgPlayer wg))
         {
             if (wg._bottomlessAppetite && item.type != ItemID.FallenStar)
-            {
                 num *= wg._bottomlessAppetiteGrabRange;
-            }
         }
         ItemLoader.GrabRange(item, self, ref num);
         return num;

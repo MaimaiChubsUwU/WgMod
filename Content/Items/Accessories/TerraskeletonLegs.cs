@@ -9,11 +9,10 @@ namespace WgMod.Content.Items.Accessories;
 [AutoloadEquip(EquipType.Shoes)]
 public class TerraskeletonLegs : ModItem
 {
-    public static readonly int MoveSpeedBonus = 8;
-    public static readonly int LavaImmunityTime = 2;
+    public const int MoveSpeedBonus = 8;
+    public const int LavaImmunityTime = 2;
 
-    public override LocalizedText Tooltip =>
-        base.Tooltip.WithFormatArgs(MoveSpeedBonus, LavaImmunityTime);
+    public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(MoveSpeedBonus, LavaImmunityTime);
 
     public override void SetDefaults()
     {
@@ -42,7 +41,6 @@ public class TerraskeletonLegs : ModItem
         if (!player.TryGetModPlayer(out WgPlayer wg))
             return;
         float immobility = wg.Weight.ClampedImmobility;
-
         wg.MovementPenalty *= float.Lerp(1f, 0.6f, immobility);
     }
 

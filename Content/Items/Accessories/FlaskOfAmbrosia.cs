@@ -29,7 +29,7 @@ namespace WgMod.Content.Items.Accessories
         {
             CreateRecipe()
                 .AddIngredient(ItemID.SweetheartNecklace)
-                .AddIngredient<Content.Items.Accessories.WeightLossPendant>()
+                .AddIngredient<WeightLossPendant>()
                 .AddTile(TileID.TinkerersWorkbench)
                 .Register();
         }

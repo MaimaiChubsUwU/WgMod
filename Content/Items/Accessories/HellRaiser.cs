@@ -25,8 +25,8 @@ public class HellRaiser : ModItem
     {
         if (!player.TryGetModPlayer(out WgPlayer wg))
             return;
+            
         float immobility = wg.Weight.ClampedImmobility;
-
         _hellRaiserMinionCount = 3;
         _hellRaiserMinionDamage = float.Lerp(-0.1f, 0.1f, immobility);
         _hellRaiserWhipSpeed = float.Lerp(0.9f, 0.8f, immobility);
