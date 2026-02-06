@@ -1,4 +1,3 @@
-using System;
 using Terraria;
 using Terraria.ModLoader;
 using WgMod.Common.Players;
@@ -7,6 +6,14 @@ namespace WgMod.Content.Buffs;
 
 public class AmbrosiaGorged : ModBuff
 {
+    public const float MaxMoveSpeed = 1.5f;
+    public const int MaxDefense = 10;
+    public const int MaxRegen = 5;
+
+    float _moveSpeed;
+    int _defense;
+    int _regen;
+
     public override void SetStaticDefaults()
     {
         Main.debuff[Type] = false;
@@ -14,38 +21,30 @@ public class AmbrosiaGorged : ModBuff
         Main.buffNoSave[Type] = true;
     }
 
-    float _ambrosiaMoveSpeed;
-    int _ambrosiaDefense;
-    int _ambrosiaRegen;
-
     public override void Update(Player player, ref int buffIndex)
     {
         if (!player.TryGetModPlayer(out WgPlayer wg))
             return;
 
         float immobility = wg.Weight.ClampedImmobility;
+        _moveSpeed = float.Lerp(1.25f, MaxMoveSpeed, immobility);
+        _defense = (int)float.Lerp(1f, MaxDefense, immobility);
+        _regen = (int)float.Lerp(1f, MaxRegen, immobility);
 
-        _ambrosiaMoveSpeed = float.Lerp(1.25f, 1.5f, immobility);
-        _ambrosiaDefense = (int)float.Lerp(1f, 10f, immobility);
-        _ambrosiaRegen = (int)float.Lerp(1f, 5f, immobility);
-
-        player.moveSpeed *= _ambrosiaMoveSpeed;
-        player.maxRunSpeed *= _ambrosiaMoveSpeed;
-        player.runAcceleration *= _ambrosiaMoveSpeed;
-        player.accRunSpeed *= _ambrosiaMoveSpeed;
-        player.statDefense += _ambrosiaDefense;
-        player.lifeRegen += _ambrosiaRegen;
+        player.moveSpeed *= _moveSpeed;
+        player.maxRunSpeed *= _moveSpeed;
+        player.runAcceleration *= _moveSpeed;
+        player.accRunSpeed *= _moveSpeed;
+        player.statDefense += _defense;
+        player.lifeRegen += _regen;
     }
 
     public override void ModifyBuffText(ref string buffName, ref string tip, ref int rare)
     {
-        if (!Main.LocalPlayer.TryGetModPlayer(out WgPlayer wg))
-            return;
-        else
-            tip = base.Description.Format(
-                MathF.Round(_ambrosiaMoveSpeed * 100f - 100f),
-                _ambrosiaDefense,
-                _ambrosiaRegen
-            );
+        tip = base.Description.Format(
+            (_moveSpeed - 1f).Percent(MaxMoveSpeed - 1f),
+            _defense.OutOf(MaxDefense),
+            _regen.OutOf(MaxRegen)
+        );
     }
 }

@@ -8,8 +8,8 @@ namespace WgMod.Content.Items.Armor.CrimatriarchArmor;
 [AutoloadEquip(EquipType.Legs)]
 public class CrimatriarchLeggings : ModItem
 {
-    float _crimatriarchLeggingsDamage;
-    float _crimatriarchLeggingsAttackSpeed;
+    float _damage;
+    float _attackSpeed;
 
     public override void SetDefaults()
     {
@@ -24,13 +24,13 @@ public class CrimatriarchLeggings : ModItem
     {
         if (!player.TryGetModPlayer(out WgPlayer wg))
             return;
+            
         float immobility = wg.Weight.ClampedImmobility;
+        _damage = float.Lerp(0.03f, 0.09f, immobility);
+        _attackSpeed = float.Lerp(0.98f, 0.94f, immobility);
 
-        _crimatriarchLeggingsDamage = float.Lerp(0.03f, 0.09f, immobility);
-        _crimatriarchLeggingsAttackSpeed = float.Lerp(0.98f, 0.94f, immobility);
-
-        player.GetDamage(DamageClass.Summon) += _crimatriarchLeggingsDamage;
-        player.GetAttackSpeed(DamageClass.SummonMeleeSpeed) *= _crimatriarchLeggingsAttackSpeed;
+        player.GetDamage(DamageClass.Summon) += _damage;
+        player.GetAttackSpeed(DamageClass.SummonMeleeSpeed) *= _attackSpeed;
     }
 
     public override void AddRecipes()

@@ -10,13 +10,12 @@ namespace WgMod.Content.Items.Armor.VacuumArmor;
 [AutoloadEquip(EquipType.Head)]
 public class VacuumHelmet : ModItem
 {
-    private float _vacuumHelmetCritChance;
-    private int _vacuumHelmetHealth;
-    private int _vacuumHelmetDefense;
-    private float _vacuumHelmetResist;
-    private float _vacuumHelmetMovePenalty;
-
-    private int _vacuumSetBonusRegen;
+    float _critChance;
+    int _health;
+    int _defense;
+    float _resist;
+    float _movePenalty;
+    int _setBonusRegen;
 
     public override void SetDefaults()
     {
@@ -54,24 +53,24 @@ public class VacuumHelmet : ModItem
             return;
 
         float immobility = wg.Weight.ClampedImmobility;
-        _vacuumHelmetCritChance = float.Lerp(1.04f, 1.08f, immobility);
-        _vacuumHelmetHealth = (int)MathF.Floor((int)float.Lerp(50, 100, immobility) / 5f) * 5;
-        _vacuumHelmetDefense = (int)float.Lerp(6f, 12f, immobility);
-        _vacuumHelmetResist = float.Lerp(0.02f, 0.04f, immobility);
-        _vacuumHelmetMovePenalty = float.Lerp(1.1f, 0.95f, immobility);
+        _critChance = float.Lerp(1.04f, 1.08f, immobility);
+        _health = (int)MathF.Floor((int)float.Lerp(50, 100, immobility) / 5f) * 5;
+        _defense = (int)float.Lerp(6f, 12f, immobility);
+        _resist = float.Lerp(0.02f, 0.04f, immobility);
+        _movePenalty = float.Lerp(1.1f, 0.95f, immobility);
 
-        player.GetCritChance(DamageClass.Generic) *= _vacuumHelmetCritChance;
-        player.statLifeMax2 += _vacuumHelmetHealth;
-        player.statDefense += _vacuumHelmetDefense;
-        player.endurance += _vacuumHelmetResist;
-        wg.MovementPenalty *= _vacuumHelmetMovePenalty;
+        player.GetCritChance(DamageClass.Generic) *= _critChance;
+        player.statLifeMax2 += _health;
+        player.statDefense += _defense;
+        player.endurance += _resist;
+        wg.MovementPenalty *= _movePenalty;
 
         player.aggro += 5;
 
         if (!wg._vacuumSetBonus)
             return;
-        _vacuumSetBonusRegen = (int)float.Lerp(5f, 20f, immobility);
-        player.lifeRegen += _vacuumSetBonusRegen;
+        _setBonusRegen = (int)float.Lerp(5f, 20f, immobility);
+        player.lifeRegen += _setBonusRegen;
         wg.WeightLossRate *= 0.5f;
     }
 

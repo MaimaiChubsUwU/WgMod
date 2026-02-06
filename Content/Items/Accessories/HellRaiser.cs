@@ -7,9 +7,10 @@ namespace WgMod.Content.Items.Accessories;
 
 public class HellRaiser : ModItem
 {
-    int _hellRaiserMinionCount;
-    float _hellRaiserMinionDamage;
-    float _hellRaiserWhipSpeed;
+    public const int MinionCount = 3;
+
+    float _minionDamage;
+    float _whipSpeed;
 
     public override void SetDefaults()
     {
@@ -27,13 +28,12 @@ public class HellRaiser : ModItem
             return;
             
         float immobility = wg.Weight.ClampedImmobility;
-        _hellRaiserMinionCount = 3;
-        _hellRaiserMinionDamage = float.Lerp(-0.1f, 0.1f, immobility);
-        _hellRaiserWhipSpeed = float.Lerp(0.9f, 0.8f, immobility);
+        _minionDamage = float.Lerp(-0.1f, 0.1f, immobility);
+        _whipSpeed = float.Lerp(0.9f, 0.8f, immobility);
 
-        player.maxMinions += _hellRaiserMinionCount;
-        player.GetDamage(DamageClass.Summon) += _hellRaiserMinionDamage;
-        player.GetAttackSpeed(DamageClass.SummonMeleeSpeed) *= _hellRaiserWhipSpeed;
+        player.maxMinions += MinionCount;
+        player.GetDamage(DamageClass.Summon) += _minionDamage;
+        player.GetAttackSpeed(DamageClass.SummonMeleeSpeed) *= _whipSpeed;
     }
 
     public override void AddRecipes()

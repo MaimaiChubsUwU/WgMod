@@ -9,12 +9,12 @@ namespace WgMod.Content.Items.Armor.CrimatriarchArmor;
 [AutoloadEquip(EquipType.Head)]
 public class CrimatriarchHood : ModItem
 {
-    float immobility;
-    float _crimatriarchHoodDamage;
-    float _crimatriarchHoodAttackSpeed;
-    float _crimatriarchSetBonusDamage;
-    float _crimatriarchSetBonusAttackSpeed;
-    int _crimatriarchSetBonusMinions = 1;
+    public const int SetBonusMinions = 1;
+
+    float _damage;
+    float _attackSpeed;
+    float _setBonusDamage;
+    float _setBonusAttackSpeed;
 
     public override void SetDefaults()
     {
@@ -36,13 +36,13 @@ public class CrimatriarchHood : ModItem
     {
         if (!player.TryGetModPlayer(out WgPlayer wg))
             return;
-        immobility = wg.Weight.ClampedImmobility;
+        
+        float immobility = wg.Weight.ClampedImmobility;
+        _damage = float.Lerp(0.03f, 0.09f, immobility);
+        _attackSpeed = float.Lerp(0.98f, 0.94f, immobility);
 
-        _crimatriarchHoodDamage = float.Lerp(0.03f, 0.09f, immobility);
-        _crimatriarchHoodAttackSpeed = float.Lerp(0.98f, 0.94f, immobility);
-
-        player.GetDamage(DamageClass.Summon) += _crimatriarchHoodDamage;
-        player.GetAttackSpeed(DamageClass.SummonMeleeSpeed) *= _crimatriarchHoodAttackSpeed;
+        player.GetDamage(DamageClass.Summon) += _damage;
+        player.GetAttackSpeed(DamageClass.SummonMeleeSpeed) *= _attackSpeed;
     }
 
     public override bool IsArmorSet(Item head, Item body, Item legs)
@@ -53,12 +53,16 @@ public class CrimatriarchHood : ModItem
 
     public override void UpdateArmorSet(Player player)
     {
-        _crimatriarchSetBonusDamage = float.Lerp(0.05f, 0.10f, immobility);
-        _crimatriarchSetBonusAttackSpeed = float.Lerp(0.95f, 0.9f, immobility);
+        if (!player.TryGetModPlayer(out WgPlayer wg))
+            return;
 
-        player.GetDamage(DamageClass.Summon) += _crimatriarchSetBonusDamage;
-        player.GetAttackSpeed(DamageClass.SummonMeleeSpeed) *= _crimatriarchSetBonusAttackSpeed;
-        player.maxMinions += _crimatriarchSetBonusMinions;
+        float immobility = wg.Weight.ClampedImmobility;
+        _setBonusDamage = float.Lerp(0.05f, 0.10f, immobility);
+        _setBonusAttackSpeed = float.Lerp(0.95f, 0.9f, immobility);
+
+        player.GetDamage(DamageClass.Summon) += _setBonusDamage;
+        player.GetAttackSpeed(DamageClass.SummonMeleeSpeed) *= _setBonusAttackSpeed;
+        player.maxMinions += SetBonusMinions;
     }
 
     public override void AddRecipes()

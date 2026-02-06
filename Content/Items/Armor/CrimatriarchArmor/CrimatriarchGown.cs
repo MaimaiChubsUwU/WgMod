@@ -8,9 +8,10 @@ namespace WgMod.Content.Items.Armor.CrimatriarchArmor;
 [AutoloadEquip(EquipType.Body)]
 public class CrimatriarchGown : ModItem
 {
-    float _crimatriarchGownDamage;
-    float _crimatriarchGownCritChance;
-    int _crimatriarchGownMinions = 1;
+    public const int MinionCount = 1;
+
+    float _damage;
+    float _critChance;
 
     public override void SetDefaults()
     {
@@ -26,15 +27,13 @@ public class CrimatriarchGown : ModItem
         if (!player.TryGetModPlayer(out WgPlayer wg))
             return;
         float immobility = wg.Weight.ClampedImmobility;
+        _damage = float.Lerp(0.05f, 0.1f, immobility);
+        _critChance = float.Lerp(1.03f, 1.09f, immobility);
 
         player.buffImmune[BuffID.Bleeding] = true;
-
-        _crimatriarchGownDamage = float.Lerp(0.05f, 0.1f, immobility);
-        _crimatriarchGownCritChance = float.Lerp(1.03f, 1.09f, immobility);
-
-        player.GetDamage(DamageClass.Summon) += _crimatriarchGownDamage;
-        player.GetCritChance(DamageClass.Summon) *= _crimatriarchGownCritChance;
-        player.maxMinions += _crimatriarchGownMinions;
+        player.GetDamage(DamageClass.Summon) += _damage;
+        player.GetCritChance(DamageClass.Summon) *= _critChance;
+        player.maxMinions += MinionCount;
     }
 
     public override void AddRecipes()

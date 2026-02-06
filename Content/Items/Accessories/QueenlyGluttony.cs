@@ -7,10 +7,10 @@ namespace WgMod.Content.Items.Accessories;
 
 public class QueenlyGluttony : ModItem
 {
-    float _queenlyGluttonyDamage;
-    float _queenlyGluttonyAttackSpeed;
-    int _queenlyGluttonyCritChance;
-    int _queenlyGluttonyArmorPenetration;
+    float _damage;
+    float _attackSpeed;
+    int _critChance;
+    int _armorPenetration;
 
     public override void SetDefaults()
     {
@@ -28,15 +28,15 @@ public class QueenlyGluttony : ModItem
             return;
 
         float immobility = wg.Weight.ClampedImmobility;
-        _queenlyGluttonyDamage = float.Lerp(0.05f, 0.2f, immobility);
-        _queenlyGluttonyAttackSpeed = float.Lerp(0.96f, 0.85f, immobility);
-        _queenlyGluttonyCritChance = (int)float.Lerp(5f, 10f, immobility);
-        _queenlyGluttonyArmorPenetration = (int)float.Lerp(2f, 6f, immobility);
+        _damage = float.Lerp(0.05f, 0.2f, immobility);
+        _attackSpeed = float.Lerp(0.96f, 0.85f, immobility);
+        _critChance = (int)float.Lerp(5f, 10f, immobility);
+        _armorPenetration = (int)float.Lerp(2f, 6f, immobility);
 
-        player.GetDamage(DamageClass.Melee) += _queenlyGluttonyDamage;
-        player.GetAttackSpeed(DamageClass.Melee) *= _queenlyGluttonyAttackSpeed;
-        player.GetCritChance(DamageClass.Melee) += _queenlyGluttonyCritChance;
-        player.GetArmorPenetration(DamageClass.Melee) += _queenlyGluttonyArmorPenetration;
+        player.GetDamage(DamageClass.Melee) += _damage;
+        player.GetAttackSpeed(DamageClass.Melee) *= _attackSpeed;
+        player.GetCritChance(DamageClass.Melee) += _critChance;
+        player.GetArmorPenetration(DamageClass.Melee) += _armorPenetration;
 
         wg._queenlyGluttony = true;
     }
