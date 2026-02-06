@@ -50,6 +50,9 @@ public partial class WgMod
         int index = self.FindBuffIndex(type);
         wg.BuffDuration[index] = timeToAdd;
 
+        if (wg._ignoreWgBuffTimer > 0)
+            return;
+
         if (_buffTable.TryGetValue(type, out var gain))
         {
             if (gain.IsInstant)

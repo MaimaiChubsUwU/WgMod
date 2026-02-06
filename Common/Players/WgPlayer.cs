@@ -26,6 +26,7 @@ public class WgPlayer : ModPlayer
     public StatModifier WeightLossRate;
 
     public readonly int[] BuffDuration = new int[Player.MaxBuffs];
+    internal int _ignoreWgBuffTimer;
 
     internal float _squishRest = 1f;
     internal float _squishPos = 1f;
@@ -224,6 +225,9 @@ public class WgPlayer : ModPlayer
 
         if (!WgClientConfig.Instance.DisableUVClothes)
             WgArmor.Render(ref _armorTarget, _armorLayers);
+
+        if (_ignoreWgBuffTimer > 0)
+            _ignoreWgBuffTimer--;
     }
 
     public override void HideDrawLayers(PlayerDrawSet drawInfo)
@@ -346,5 +350,10 @@ public class WgPlayer : ModPlayer
             else
                 target.AddBuff(BuffID.GelBalloonBuff, 2 * 60); // 49/50 chance to apply Sparkle Slime Balloon effect to enemy for 2 seconds
         }
+    }
+
+    public override void OnRespawn()
+    {
+        _ignoreWgBuffTimer = 2;
     }
 }
