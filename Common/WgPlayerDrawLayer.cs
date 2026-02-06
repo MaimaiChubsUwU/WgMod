@@ -96,13 +96,10 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
         // Frame [6 to 19] - Walk
 
         float animOffset = 0f;
-        if (stage < Weight.ImmobileStage)
-        {
-            if (frame == 5)
-                animOffset = Math.Clamp(player.velocity.Y * player.gravDir / 4f, -1f, 1f) * -2f;
-            else if (frame >= 6 && frame <= 19)
-                animOffset = float.Lerp(2f, -2f, MathF.Sin((frame - 6) / 13f * MathF.Tau * 2f) * 0.5f + 0.5f);
-        }
+        if (frame == 5)
+            animOffset = Math.Clamp(player.velocity.Y * player.gravDir / 4f, -1f, 1f) * -2f;
+        else if (frame >= 6 && frame <= 19)
+            animOffset = float.Lerp(2f, -2f, MathF.Sin((frame - 6) / 13f * MathF.Tau * 2f) * 0.5f + 0.5f);
         wg._bellyOffset = animOffset;
 
         Color skinColor = drawInfo.colorBodySkin; //player.GetImmuneAlphaPure(player.skinColor, drawInfo.shadow);
@@ -111,6 +108,8 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
         float baseSquish = (bellySquish + 1f) * 0.5f;
 
         bool drawArmor = !WgClientConfig.Instance.DisableUVClothes;
+        if (drawInfo.shadow != 0f && wg._lastBodySlot <= 0)
+            drawArmor = false;
         if (drawArmor)
             SetupArmorLayers(wg, drawInfo);
 
