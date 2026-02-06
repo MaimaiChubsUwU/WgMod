@@ -16,23 +16,25 @@ public partial class WgMod
 {
     public static void RegisterHooks()
     {
-        On_Player.AddBuff += OnPlayerAddBuff;
-        On_Player.DelBuff += OnPlayerDelBuff;
-        On_Player.GetItemGrabRange += OnGetItemGrabRange;
+        On_Player.AddBuff += OnPlayer_AddBuff;
+        On_Player.DelBuff += OnPlayer_DelBuff;
+        On_Player.GetItemGrabRange += OnPlayer_GetItemGrabRange;
         On_PlayerSittingHelper.UpdateSitting += OnUpdateSitting;
-        On_Mount.Draw += OnMountDraw;
-    }
-    
-    public static void UnregisterHooks()
-    {
-        On_Player.AddBuff -= OnPlayerAddBuff;
-        On_Player.DelBuff -= OnPlayerDelBuff;
-        On_Player.GetItemGrabRange -= OnGetItemGrabRange;
-        On_PlayerSittingHelper.UpdateSitting -= OnUpdateSitting;
-        On_Mount.Draw -= OnMountDraw;
+        On_Mount.Draw += OnMount_Draw;
+        On_Main.GetPlayerArmPosition += OnMain_GetPlayerArmPosition;
     }
 
-    public static void OnPlayerAddBuff(On_Player.orig_AddBuff orig, Player self, int type, int timeToAdd, bool quiet, bool foodHack)
+    static void UnregisterHooks()
+    {
+        On_Player.AddBuff -= OnPlayer_AddBuff;
+        On_Player.DelBuff -= OnPlayer_DelBuff;
+        On_Player.GetItemGrabRange -= OnPlayer_GetItemGrabRange;
+        On_PlayerSittingHelper.UpdateSitting -= OnUpdateSitting;
+        On_Mount.Draw -= OnMount_Draw;
+        On_Main.GetPlayerArmPosition -= OnMain_GetPlayerArmPosition;
+    }
+
+    static void OnPlayer_AddBuff(On_Player.orig_AddBuff orig, Player self, int type, int timeToAdd, bool quiet, bool foodHack)
     {
         if (!self.TryGetModPlayer(out WgPlayer wg))
         {
@@ -65,7 +67,7 @@ public partial class WgMod
         }
     }
 
-    public static void OnPlayerDelBuff(On_Player.orig_DelBuff orig, Player self, int index)
+    static void OnPlayer_DelBuff(On_Player.orig_DelBuff orig, Player self, int index)
     {
         if (self.TryGetModPlayer(out WgPlayer wg))
         {
@@ -87,8 +89,26 @@ public partial class WgMod
         orig(self, index);
     }
 
+    static Vector2 OnMain_GetPlayerArmPosition(On_Main.orig_GetPlayerArmPosition orig, Projectile proj)
+    {
+        Player player = Main.player[proj.owner];
+        Vector2 vector = Main.OffsetsPlayerOnhand[player.bodyFrame.Y / 56] * 2f;
+        if (player.direction != 1)
+            vector.X = player.bodyFrame.Width - vector.X;
+        if (player.gravDir != 1f)
+            vector.Y = player.bodyFrame.Height - vector.Y;
+        vector -= new Vector2(player.bodyFrame.Width - player.width, player.bodyFrame.Height - player.height) / 2f;
+        Vector2 pos = player.MountedCenter - new Vector2(player.width, player.height) / 2f + vector + Vector2.UnitY * player.gfxOffY;
+        if (player.mount.Active && player.mount.Type == MountID.Wolf)
+        {
+            pos.Y -= player.mount.PlayerOffsetHitbox;
+            pos += new Vector2(12 * player.direction, -12f);
+        }
+        return player.RotatedRelativePoint(pos, false, true);
+    }
+
     // This is needed for BottomlessAppetite item pickup range changes!
-    public static int OnGetItemGrabRange(On_Player.orig_GetItemGrabRange orig, Player self, Item item)
+    static int OnPlayer_GetItemGrabRange(On_Player.orig_GetItemGrabRange orig, Player self, Item item)
     {
         int num = Player.defaultItemGrabRange;
         if (self.goldRing && item.IsACoin)
@@ -116,7 +136,7 @@ public partial class WgMod
         return num;
     }
 
-    public static void OnUpdateSitting(On_PlayerSittingHelper.orig_UpdateSitting orig, ref PlayerSittingHelper self, Player player)
+    static void OnUpdateSitting(On_PlayerSittingHelper.orig_UpdateSitting orig, ref PlayerSittingHelper self, Player player)
     {
         if (!player.TryGetModPlayer(out TreadmillPlayer tp) || !tp._onTreadmill)
         {
@@ -132,7 +152,7 @@ public partial class WgMod
         player.controlRight = right;
     }
 
-    public static void OnMountDraw(On_Mount.orig_Draw orig, Mount self, List<DrawData> playerDrawData, int drawType, Player drawPlayer, Vector2 Position, Color drawColor, SpriteEffects playerEffect, float shadow)
+    static void OnMount_Draw(On_Mount.orig_Draw orig, Mount self, List<DrawData> playerDrawData, int drawType, Player drawPlayer, Vector2 Position, Color drawColor, SpriteEffects playerEffect, float shadow)
     {
         if (drawPlayer.TryGetModPlayer(out WgPlayer wg) && self.Active)
             Position.Y += WeightValues.DrawOffsetY(wg.Weight.GetStage());

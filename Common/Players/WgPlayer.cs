@@ -221,7 +221,7 @@ public class WgPlayer : ModPlayer
 
         // Can't find a better way to change the draw position
         _lastGfxOffY = Player.gfxOffY;
-        Player.gfxOffY -= WeightValues.DrawOffsetY(Weight.GetStage());
+        Player.gfxOffY -= WeightValues.DrawOffsetY(Weight.GetStage()) * Player.gravDir;
 
         if (!WgClientConfig.Instance.DisableUVClothes)
             WgArmor.Render(ref _armorTarget, _armorLayers);
