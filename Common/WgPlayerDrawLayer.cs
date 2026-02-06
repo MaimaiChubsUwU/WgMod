@@ -70,6 +70,9 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
     protected override void Draw(ref PlayerDrawSet drawInfo)
     {
         Player player = drawInfo.drawPlayer;
+        if (player.dead)
+            return;
+
         if (!player.TryGetModPlayer(out WgPlayer wg))
             return;
 
