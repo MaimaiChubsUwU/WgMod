@@ -24,7 +24,9 @@ public partial class WgPlayer : ModPlayer
     public readonly int[] BuffDuration = new int[Player.MaxBuffs];
     internal int _ignoreWgBuffTimer;
 
+    internal float _finalKnockbackResistance;
     internal float _finalMovementFactor;
+    
     internal float _buffTotalGain;
     internal int _iceBreakTimer;
 
@@ -82,8 +84,18 @@ public partial class WgPlayer : ModPlayer
         if (WgServerConfig.Instance.DisableFatBuffs || Player.mount.Active)
             return;
 
-        float basePenalty;
         int stage = Weight.GetStage();
+        if (stage >= Weight.DamageReductionStage)
+        {
+            if (stage < Weight.ImmobileStage)
+                _finalKnockbackResistance = float.Lerp(0f, 0.6f, Weight.GetClampedFactor(Weight.FromStage(Weight.DamageReductionStage), Weight.Immobile));
+            else
+                _finalKnockbackResistance = 1f;
+        }
+        else
+            _finalKnockbackResistance = 0f;
+
+        float basePenalty;
         if (stage < Weight.ImmobileStage)
         {
             float immobility = Weight.ClampedImmobility;
@@ -218,12 +230,6 @@ public partial class WgPlayer : ModPlayer
         SetWeight(new Weight(Weight.Mass * WeightValues.GetDeathPenalty(Player.difficulty)));
     }
 
-    public override void OnHurt(Player.HurtInfo info)
-    {
-        if (_ambrosiaOnHit) // If FlaskOfAmbrosia is equipped
-            Player.AddBuff(ModContent.BuffType<AmbrosiaGorged>(), 8 * 60); // Apply AmbrosiaGorged to player for 8 seconds when taking damage
-    }
-
     public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
     {
         if (_queenlyGluttony && (hit.DamageType == DamageClass.Melee || hit.DamageType == DamageClass.MeleeNoSpeed)) // If QueenlyGluttony is equipped and player is using melee
@@ -233,5 +239,24 @@ public partial class WgPlayer : ModPlayer
             else
                 target.AddBuff(BuffID.GelBalloonBuff, 2 * 60); // 49/50 chance to apply Sparkle Slime Balloon effect to enemy for 2 seconds
         }
+    }
+
+    public override void OnHurt(Player.HurtInfo info)
+    {
+        if (_ambrosiaOnHit) // If FlaskOfAmbrosia is equipped
+            Player.AddBuff(ModContent.BuffType<AmbrosiaGorged>(), 8 * 60); // Apply AmbrosiaGorged to player for 8 seconds when taking damage
+    }
+
+    public override void ModifyHurt(ref Player.HurtModifiers modifiers)
+    {
+        if (Player.noKnockback)
+            return;
+        Player.noKnockback = true;
+        modifiers.KnockbackImmunityEffectiveness *= _finalKnockbackResistance;
+    }
+
+    public override void PostHurt(Player.HurtInfo info)
+    {
+        Player.noKnockback = false;
     }
 }

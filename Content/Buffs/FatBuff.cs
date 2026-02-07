@@ -38,7 +38,12 @@ public class FatBuff : WgBuffBase
             tip = this.GetLocalizedValue("DisabledBuffs");
             return;
         }
-        tip = base.Description.Format((1f - wg._finalMovementFactor).Percent(), _damageReduction.Percent(), _lifeIncrease);
+        tip = base.Description.Format(
+            (1f - wg._finalMovementFactor).Percent(),
+            _damageReduction.Percent(),
+            _lifeIncrease,
+            wg._finalKnockbackResistance.Percent()
+        );
         if (!WgServerConfig.Instance.DisableFatHitbox)
         {
             string line = this.GetLocalization("HitboxIncrease").Format((WeightValues.GetHitboxWidthInTiles(stage) - 2).OutOf(WeightValues.GetHitboxWidthInTiles(Weight.ImmobileStage) - 2));

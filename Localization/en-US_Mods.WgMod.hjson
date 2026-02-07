@@ -187,6 +187,7 @@ Buffs: {
 			Reduced movement speed by {0}%
 			Reduces damage taken by {1}%
 			Increases maximum health by {2}
+			Added {3}% knockback resistance
 			'''
 		HitboxIncrease: Increased hitbox horizontally by {0} tiles
 		DisabledBuffs: Fat buffs and debuffs disabled
