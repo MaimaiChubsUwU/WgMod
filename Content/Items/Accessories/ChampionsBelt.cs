@@ -23,7 +23,7 @@ public class ChampionsBelt : ModItem
             return;
         float immobility = wg.Weight.ClampedImmobility;
         wg._championsBelt = true;
-        wg._championsBeltMeleeScale = (int)float.Lerp(1.25f, 2, immobility);
+        wg._championsBeltMeleeScale = float.Lerp(1.25f, 2, immobility);
     }
 
     public override void AddRecipes()
@@ -35,5 +35,17 @@ public class ChampionsBelt : ModItem
             .AddIngredient(ItemID.Amethyst, 2)
             .AddTile(TileID.Anvils)
             .Register();
+    }
+}
+
+public class ChampionsBeltScaling : GlobalItem
+{
+    public override void ModifyItemScale(Item item, Player player, ref float scale)
+    {
+        if (!player.TryGetModPlayer(out WgPlayer wg))
+            return;
+
+        if (wg._championsBelt && item.CountsAsClass(DamageClass.Melee))
+            scale *= wg._championsBeltMeleeScale;
     }
 }
