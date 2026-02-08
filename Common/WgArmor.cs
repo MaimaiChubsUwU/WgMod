@@ -32,11 +32,6 @@ public static class WgArmor
 
     public static void Render(ref RenderTarget2D target, ReadOnlySpan<Layer> layers)
     {
-        UVShader.Wait();
-        SoftenShader.Wait();
-        BaseTexture.Wait();
-        BellyTexture.Wait();
-
         GraphicsDevice device = Main.graphics.GraphicsDevice;
         SpriteBatch spriteBatch = Main.spriteBatch;
         target ??= new RenderTarget2D(device, TextureWidth * 2, TextureHeight, false, device.PresentationParameters.BackBufferFormat, DepthFormat.None);
