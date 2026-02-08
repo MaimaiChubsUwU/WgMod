@@ -38,7 +38,11 @@ public partial class WgPlayer
     public override void LoadData(TagCompound tag)
     {
         if (tag.TryGet("Weight", out float w))
+        {
+            if (float.IsNaN(w) || !float.IsFinite(w))
+                w = Weight.Base.Mass;
             SetWeight(new Weight(w), false);
+        }
         else
             SetWeight(Weight.Base, false);
     }
