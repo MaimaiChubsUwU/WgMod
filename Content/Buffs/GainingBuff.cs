@@ -13,7 +13,10 @@ public class GainingBuff : WgBuffBase
     {
         if (!player.TryGetModPlayer(out WgPlayer wg))
             return;
-        wg.SetWeight(wg.Weight + wg._buffTotalGain / wg.BuffDuration[buffIndex]);
+        int duration = wg.BuffDuration[buffIndex];
+        if (duration == 0)
+            return;
+        wg.SetWeight(wg.Weight + wg._buffTotalGain / duration);
     }
 
     public static bool AddBuff(WgPlayer wg, GainOptions gain)
