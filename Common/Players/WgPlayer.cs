@@ -13,7 +13,7 @@ namespace WgMod.Common.Players;
 public partial class WgPlayer : ModPlayer
 {
     /// <summary> The player's weight </summary>
-    public Weight Weight { get; private set; }
+    public Weight Weight { get; private set; } = Weight.Base;
 
     /// <summary> How much movement will be reduced because of the player's weight, multiply this </summary>
     public StatModifier MovementPenalty;
@@ -22,7 +22,7 @@ public partial class WgPlayer : ModPlayer
     public StatModifier WeightLossRate;
 
     public readonly int[] BuffDuration = new int[Player.MaxBuffs];
-    internal int _ignoreWgBuffTimer;
+    internal int _ignoreWgBuffTimer = 2;
 
     internal float _finalKnockbackResistance;
     internal float _finalMovementFactor;
@@ -45,6 +45,11 @@ public partial class WgPlayer : ModPlayer
     {
         SetWeight(Weight.Base, false);
         InitializeVisuals();
+    }
+
+    public override void OnEnterWorld()
+    {
+        _ignoreWgBuffTimer = 2;
     }
 
     public void SetWeight(Weight weight, bool effects = true)
