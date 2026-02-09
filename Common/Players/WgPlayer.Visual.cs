@@ -22,6 +22,8 @@ public partial class WgPlayer
 
     void InitializeVisuals()
     {
+        if (Main.dedServ)
+            return;
         if (!WgClientConfig.Instance.DisableUVClothes)
         {
             Main.RunOnMainThread(() =>
@@ -39,12 +41,14 @@ public partial class WgPlayer
 
     void PostUpdateVisuals()
     {
-        if (!WgClientConfig.Instance.DisableUVClothes)
-            WgArmor.Render(ref _armorTarget, _armorLayers);
-
         // Can't find a better way to change the draw position
         _lastGfxOffY = Player.gfxOffY;
         Player.gfxOffY -= WeightValues.DrawOffsetY(Weight.GetStage()) * Player.gravDir;
+
+        if (Main.dedServ)
+            return;
+        if (!WgClientConfig.Instance.DisableUVClothes)
+            WgArmor.Render(ref _armorTarget, _armorLayers);
     }
 
     void UpdateJiggle()
