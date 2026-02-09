@@ -100,9 +100,7 @@ public partial class WgPlayer : ModPlayer
         Player.runAcceleration *= _finalMovementFactor;
         Player.maxRunSpeed *= _finalMovementFactor;
         Player.accRunSpeed *= _finalMovementFactor;
-
-        if (Player.whoAmI == Main.myPlayer) // If it's the local player
-            Player.jumpSpeed = float.Lerp(Player.jumpSpeed * 0.2f, Player.jumpSpeed, _finalMovementFactor);
+        Player.jumpSpeed *= float.Lerp(0.2f, 1f, _finalMovementFactor);
     }
 
     public override void PostUpdateMiscEffects()

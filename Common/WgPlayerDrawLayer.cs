@@ -98,10 +98,13 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
         // Frame [6 to 19] - Walk
 
         float animOffset = 0f;
-        if (frame == 5)
-            animOffset = Math.Clamp(player.velocity.Y * player.gravDir / 4f, -1f, 1f) * -2f;
-        else if (frame >= 6 && frame <= 19)
-            animOffset = float.Lerp(2f, -2f, MathF.Sin((frame - 6) / 13f * MathF.Tau * 2f) * 0.5f + 0.5f);
+        if (wg._finalMovementFactor > 0.01f)
+        {
+            if (frame == 5)
+                animOffset = Math.Clamp(player.velocity.Y * player.gravDir / 4f, -1f, 1f) * -2f;
+            else if (frame >= 6 && frame <= 19)
+                animOffset = float.Lerp(2f, -2f, MathF.Sin((frame - 6) / 13f * MathF.Tau * 2f) * 0.5f + 0.5f);
+        }
         wg._bellyOffset = animOffset;
 
         Color skinColor = drawInfo.colorBodySkin; //player.GetImmuneAlphaPure(player.skinColor, drawInfo.shadow);
