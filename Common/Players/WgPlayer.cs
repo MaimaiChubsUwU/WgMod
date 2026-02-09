@@ -51,7 +51,7 @@ public partial class WgPlayer : ModPlayer
         Weight = Weight.Clamp(weight);
         if (Weight.GetStage() != prevStage && effects)
         {
-            SoundEngine.PlaySound(new SoundStyle("WgMod/Assets/Sounds/Belly_", 3, SoundType.Sound));
+            SoundEngine.PlaySound(new SoundStyle("WgMod/Assets/Sounds/Belly_", 3, SoundType.Sound), Player.Center);
             _squishPos += 0.06f;
         }
     }

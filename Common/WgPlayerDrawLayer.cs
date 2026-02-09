@@ -5,7 +5,6 @@ using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
-using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Common.Configs;
 using WgMod.Common.Players;
@@ -22,14 +21,14 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
 
     public override void SetStaticDefaults()
     {
-        if (Main.netMode == NetmodeID.Server)
+        if (Main.dedServ)
             return;
         WgArms.SetupDrawing(Mod);
     }
 
     public override void Load()
     {
-        if (Main.netMode == NetmodeID.Server)
+        if (Main.dedServ)
             return;
         WgArms.Load(Mod);
         WgArmor.Load(Mod);

@@ -24,6 +24,12 @@ public class FatBuff : WgBuffBase
         Main.buffNoTimeDisplay[Type] = true;
         Main.buffNoSave[Type] = true;
         BuffID.Sets.TimeLeftDoesNotDecrease[Type] = true;
+    }
+
+    public override void Load()
+    {
+        if (Main.dedServ)
+            return;
         _stagesTexture = ModContent.Request<Texture2D>($"{Texture}_Stages");
     }
 

@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Common.Configs;
 
@@ -23,7 +22,7 @@ public partial class WgPlayer
 
     void InitializeVisuals()
     {
-        if (Main.netMode == NetmodeID.Server)
+        if (Main.dedServ)
             return;
         if (!WgClientConfig.Instance.DisableUVClothes)
         {
@@ -42,12 +41,14 @@ public partial class WgPlayer
 
     void PostUpdateVisuals()
     {
-        if (!WgClientConfig.Instance.DisableUVClothes && Main.netMode != NetmodeID.Server)
-            WgArmor.Render(ref _armorTarget, _armorLayers);
-
         // Can't find a better way to change the draw position
         _lastGfxOffY = Player.gfxOffY;
         Player.gfxOffY -= WeightValues.DrawOffsetY(Weight.GetStage()) * Player.gravDir;
+
+        if (Main.dedServ)
+            return;
+        if (!WgClientConfig.Instance.DisableUVClothes)
+            WgArmor.Render(ref _armorTarget, _armorLayers);
     }
 
     void UpdateJiggle()
