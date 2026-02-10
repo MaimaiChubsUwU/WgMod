@@ -17,6 +17,16 @@ public class GlutGut : ModItem
         Item.value = Item.buyPrice(gold: 1);
     }
 
+    public override void AddRecipes()
+    {
+        CreateRecipe()
+            .AddIngredient(ItemID.HallowedBar, 8)
+            .AddIngredient(ItemID.SoulofMight, 12)
+            .AddIngredient(ItemID.Wire, 6)
+            .AddTile(TileID.MythrilAnvil)
+            .Register();
+    }
+
     public override void UpdateAccessory(Player player, bool hideVisual)
     {
         if (!player.TryGetModPlayer(out GlutGutPlayer gp))
