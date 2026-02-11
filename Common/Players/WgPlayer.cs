@@ -25,7 +25,7 @@ public partial class WgPlayer : ModPlayer
     internal int _ignoreWgBuffTimer = 2;
 
     internal float _finalKnockbackResistance;
-    internal float _finalMovementFactor;
+    internal float _finalMovementFactor = 1f;
 
     internal float _buffTotalGain;
     internal int _iceBreakTimer;

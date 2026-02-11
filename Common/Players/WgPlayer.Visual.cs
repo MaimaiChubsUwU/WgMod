@@ -29,7 +29,7 @@ public partial class WgPlayer
             Main.RunOnMainThread(() =>
             {
                 WgPlayerDrawLayer.SetupArmorLayers(this);
-                WgArmor.Render(ref _armorTarget, _armorLayers);
+                WgArmor.Render(ref _armorTarget, _armorLayers, Player.Male);
             });
         }
     }
@@ -48,7 +48,7 @@ public partial class WgPlayer
         if (Main.dedServ)
             return;
         if (!WgClientConfig.Instance.DisableUVClothes)
-            WgArmor.Render(ref _armorTarget, _armorLayers);
+            WgArmor.Render(ref _armorTarget, _armorLayers, Player.Male);
     }
 
     void UpdateJiggle()
