@@ -229,6 +229,11 @@ Items: {
 			Effects scale with your obesity
 			'''
 	}
+
+	GuideToLiftingYourFatAss: {
+		DisplayName: Guide to Lifting Your Fat Ass
+		Tooltip: Reduces movement penalty by 50% in exchange for mana
+	}
 }
 
 Buffs: {
