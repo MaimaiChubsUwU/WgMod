@@ -31,12 +31,16 @@ public class GluttedGut : ModBuff
         player.maxRunSpeed *= _moveSpeed;
         player.runAcceleration *= _moveSpeed;
         player.accRunSpeed *= _moveSpeed;
-        player.GetDamage(DamageClass.Generic) *= _damage;
+        player.GetDamage(DamageClass.Generic) += _damage;
         player.GetAttackSpeed(DamageClass.Generic) *= _attackSpeed;
     }
 
     public override void ModifyBuffText(ref string buffName, ref string tip, ref int rare)
     {
-        tip = base.Description.Format((_moveSpeed - 1f).Percent(), (_damage - 1f).Percent(), (_attackSpeed - 1f).Percent());
+        tip = base.Description.Format(
+            (_moveSpeed - 1f).Percent(),
+            (_damage - 1f).Percent(),
+            (_attackSpeed - 1f).Percent()
+        );
     }
 }

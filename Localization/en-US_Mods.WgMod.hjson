@@ -160,6 +160,7 @@ Items: {
 			'''
 			Increases summon damage by {0}%
 			Increases summon critical strike chance by {1}%
+			Immune to bleeding
 			Effects scale with your obesity
 			'''
 	}
@@ -189,6 +190,42 @@ Items: {
 			'''
 			Stuffing your fat gut gives you power~
 			Increased damage but decreased speed after eating
+			Effects scale with your obesity
+			'''
+	}
+
+	HexborneSkirt: {
+		DisplayName: Hexborne Skirt
+		Tooltip:
+			'''
+			Increases magic damage by {0}%
+			Increases mana cost by {1}%
+			Effects scale with your obesity
+			'''
+	}
+
+	HexborneHood: {
+		DisplayName: Hexborne Hood
+		Tooltip:
+			'''
+			Increases magic damage by {0}%
+			Increases mana cost by {1}%
+			Effects scale with your obesity
+			'''
+		SetBonus:
+			'''
+			Increases magic damage by {0}%
+			Increases defense by {1}
+			'''
+	}
+
+	HexborneCrop: {
+		DisplayName: Hexborne Crop
+		Tooltip:
+			'''
+			Increases magic damage by {0}%
+			Increases mana cost by {1}%
+			Immune to poison
 			Effects scale with your obesity
 			'''
 	}

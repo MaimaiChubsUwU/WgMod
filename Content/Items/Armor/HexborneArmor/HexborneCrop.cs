@@ -4,50 +4,49 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using WgMod.Common.Players;
 
-namespace WgMod.Content.Items.Armor.CrimatriarchArmor;
+namespace WgMod.Content.Items.Armor.HexborneArmor;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
-[Credit(ProjectRole.Artist, Contributor.trilophyte)]
-[AutoloadEquip(EquipType.Legs)]
-public class CrimatriarchLeggings : ModItem
+[AutoloadEquip(EquipType.Body)]
+public class HexborneCrop : ModItem
 {
     WgStat _damage = new(0.03f, 0.09f);
-    WgStat _attackSpeed = new(0.98f, 0.94f);
+    WgStat _manaCost = new(1.02f, 1.08f);
 
     public override void SetDefaults()
     {
-        Item.width = 22;
-        Item.height = 18;
+        Item.width = 30;
+        Item.height = 20;
         Item.value = Item.sellPrice(silver: 60);
         Item.rare = ItemRarityID.Orange;
-        Item.defense = 5;
+        Item.defense = 7;
     }
 
     public override void UpdateEquip(Player player)
     {
         if (!player.TryGetModPlayer(out WgPlayer wg))
             return;
-
         float immobility = wg.Weight.ClampedImmobility;
         _damage.Lerp(immobility);
-        _attackSpeed.Lerp(immobility);
+        _manaCost.Lerp(immobility);
 
-        player.GetDamage(DamageClass.Summon) += _damage;
-        player.GetAttackSpeed(DamageClass.SummonMeleeSpeed) *= _attackSpeed;
+        player.buffImmune[BuffID.Poisoned] = true;
+        player.GetDamage(DamageClass.Magic) += _damage;
+        player.manaCost *= _manaCost;
     }
 
     public override void AddRecipes()
     {
         CreateRecipe()
-            .AddIngredient(ItemID.CrimtaneBar, 25)
-            .AddIngredient(ItemID.Bone, 20)
-            .AddIngredient(ItemID.TissueSample, 10)
+            .AddIngredient(ItemID.DemoniteBar, 30)
+            .AddIngredient(ItemID.VilePowder, 20)
+            .AddIngredient(ItemID.ShadowScale, 15)
             .AddTile(TileID.Anvils)
             .Register();
     }
 
     public override void ModifyTooltips(List<TooltipLine> tooltips)
     {
-        tooltips.FormatLines(_damage.Percent(), (1f - _attackSpeed).Percent());
+        tooltips.FormatLines(_damage.Percent(), _manaCost.Percent());
     }
 }

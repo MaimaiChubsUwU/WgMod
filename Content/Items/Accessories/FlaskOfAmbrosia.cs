@@ -17,7 +17,7 @@ public class FlaskOfAmbrosia : ModItem
 
         Item.accessory = true;
         Item.rare = ItemRarityID.Orange;
-        Item.value = Item.buyPrice(gold: 1);
+        Item.value = Item.buyPrice(gold: 4);
     }
 
     public override void UpdateAccessory(Player player, bool hideVisual)

@@ -14,7 +14,8 @@ public class TerraskeletonLegs : ModItem
     public const int MoveSpeedBonus = 8;
     public const int LavaImmunityTime = 2;
 
-    public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(MoveSpeedBonus, LavaImmunityTime);
+    public override LocalizedText Tooltip =>
+        base.Tooltip.WithFormatArgs(MoveSpeedBonus, LavaImmunityTime);
 
     public override void SetDefaults()
     {
@@ -23,7 +24,7 @@ public class TerraskeletonLegs : ModItem
 
         Item.accessory = true;
         Item.rare = ItemRarityID.Lime;
-        Item.value = Item.buyPrice(gold: 1);
+        Item.value = Item.buyPrice(gold: 17);
     }
 
     public override void UpdateAccessory(Player player, bool hideVisual)

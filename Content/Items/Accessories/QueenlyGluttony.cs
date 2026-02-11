@@ -21,7 +21,7 @@ public class QueenlyGluttony : ModItem
 
         Item.accessory = true;
         Item.rare = ItemRarityID.Pink;
-        Item.value = Item.buyPrice(gold: 1);
+        Item.value = Item.buyPrice(gold: 4);
     }
 
     public override void UpdateAccessory(Player player, bool hideVisual)
@@ -57,7 +57,10 @@ public class QueenlyGluttonyPlayer : ModPlayer
 
     public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
     {
-        if (_active && (hit.DamageType == DamageClass.Melee || hit.DamageType == DamageClass.MeleeNoSpeed)) // If QueenlyGluttony is equipped and player is using melee
+        if (
+            _active
+            && (hit.DamageType == DamageClass.Melee || hit.DamageType == DamageClass.MeleeNoSpeed)
+        ) // If QueenlyGluttony is equipped and player is using melee
         {
             if (Main.rand.NextBool(50))
                 target.AddBuff(BuffID.Shimmer, 2 * 60); // 1/50 chance to apply shimmer to enemy for 2 seconds

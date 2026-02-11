@@ -5,6 +5,7 @@ using WgMod.Content.Buffs;
 
 namespace WgMod.Content.Items.Accessories;
 
+[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 public class GlutGut : ModItem
 {
     public override void SetDefaults()
@@ -14,7 +15,7 @@ public class GlutGut : ModItem
 
         Item.accessory = true;
         Item.rare = ItemRarityID.LightRed;
-        Item.value = Item.buyPrice(gold: 1);
+        Item.value = Item.buyPrice(gold: 6);
     }
 
     public override void AddRecipes()

@@ -58,11 +58,6 @@ public class BottomlessAppetitePlayer : ModPlayer
         On_Player.GetItemGrabRange -= OnGetItemGrabRange;
     }
 
-    public override void ResetEffects()
-    {
-        _active = false;
-    }
-
     // folly: I think you can do this in a simpler way with a GlobalItem
     // This is needed for BottomlessAppetite item pickup range changes!
     static int OnGetItemGrabRange(On_Player.orig_GetItemGrabRange orig, Player self, Item item)
@@ -70,11 +65,25 @@ public class BottomlessAppetitePlayer : ModPlayer
         int num = Player.defaultItemGrabRange;
         if (self.goldRing && item.IsACoin)
             num += Item.coinGrabRange;
-        if (self.manaMagnet && (item.type == ItemID.Star || item.type == ItemID.SoulCake || item.type == ItemID.SugarPlum))
+        if (
+            self.manaMagnet
+            && (
+                item.type == ItemID.Star
+                || item.type == ItemID.SoulCake
+                || item.type == ItemID.SugarPlum
+            )
+        )
             num += Item.manaGrabRange;
         if (item.type == ItemID.ManaCloakStar)
             num += Item.manaGrabRange;
-        if (self.lifeMagnet && (item.type == ItemID.Heart || item.type == ItemID.CandyApple || item.type == ItemID.CandyCane))
+        if (
+            self.lifeMagnet
+            && (
+                item.type == ItemID.Heart
+                || item.type == ItemID.CandyApple
+                || item.type == ItemID.CandyCane
+            )
+        )
             num += Item.lifeGrabRange;
         if (self.treasureMagnet)
             num += Item.treasureGrabRange;
@@ -82,7 +91,12 @@ public class BottomlessAppetitePlayer : ModPlayer
             num += 50;
         if (ItemID.Sets.NebulaPickup[item.type])
             num += 100;
-        if (self.difficulty == PlayerDifficultyID.Creative && CreativePowerManager.Instance.GetPower<CreativePowers.FarPlacementRangePower>().IsEnabledForPlayer(self.whoAmI))
+        if (
+            self.difficulty == PlayerDifficultyID.Creative
+            && CreativePowerManager
+                .Instance.GetPower<CreativePowers.FarPlacementRangePower>()
+                .IsEnabledForPlayer(self.whoAmI)
+        )
             num += 240;
         if (self.TryGetModPlayer(out BottomlessAppetitePlayer ba))
         {
