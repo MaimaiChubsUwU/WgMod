@@ -16,7 +16,7 @@ public class ChampionsBelt : ModItem
 
         Item.accessory = true;
         Item.rare = ItemRarityID.Red;
-        Item.value = Item.buyPrice(gold: 1);
+        Item.value = Item.buyPrice(silver: 20);
     }
 
     public override void UpdateAccessory(Player player, bool hideVisual)

@@ -26,7 +26,7 @@ public class VacuumHelmet : ModItem
     {
         Item.width = 18;
         Item.height = 18;
-        Item.value = Item.sellPrice(gold: 1);
+        Item.value = Item.sellPrice(gold: 2);
         Item.rare = ItemRarityID.Red;
         Item.defense = 36;
     }
@@ -65,7 +65,7 @@ public class VacuumHelmet : ModItem
 
         float immobility = wg.Weight.ClampedImmobility;
         _critChance.Lerp(immobility);
-        
+
         _health.Lerp(immobility);
         _health.Value = MathF.Floor(_health.Value / 5f) * 5f;
 
@@ -96,6 +96,12 @@ public class VacuumHelmet : ModItem
 
     public override void ModifyTooltips(List<TooltipLine> tooltips)
     {
-        tooltips.FormatLines((_critChance - 1f).Percent(), _health, _defense, _resist.Percent(), (_movePenalty.Value - 1f).Percent());
+        tooltips.FormatLines(
+            (_critChance - 1f).Percent(),
+            _health,
+            _defense,
+            _resist.Percent(),
+            (_movePenalty.Value - 1f).Percent()
+        );
     }
 }

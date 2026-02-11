@@ -17,7 +17,7 @@ public class ExoskeletonLegs : ModItem
 
         Item.accessory = true;
         Item.rare = ItemRarityID.Orange;
-        Item.value = Item.buyPrice(gold: 1);
+        Item.value = Item.buyPrice(gold: 2);
     }
 
     public override void UpdateAccessory(Player player, bool hideVisual)

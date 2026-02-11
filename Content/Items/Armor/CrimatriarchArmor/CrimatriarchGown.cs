@@ -20,7 +20,7 @@ public class CrimatriarchGown : ModItem
     {
         Item.width = 30;
         Item.height = 20;
-        Item.value = Item.sellPrice(gold: 1);
+        Item.value = Item.sellPrice(silver: 80);
         Item.rare = ItemRarityID.Orange;
         Item.defense = 6;
     }

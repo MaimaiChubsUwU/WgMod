@@ -21,7 +21,7 @@ public class VacuumSkirt : ModItem
     {
         Item.width = 18;
         Item.height = 18;
-        Item.value = Item.sellPrice(gold: 1);
+        Item.value = Item.sellPrice(gold: 2);
         Item.rare = ItemRarityID.Red;
         Item.defense = 32;
     }
@@ -30,10 +30,10 @@ public class VacuumSkirt : ModItem
     {
         if (!player.TryGetModPlayer(out WgPlayer wg))
             return;
-            
+
         float immobility = wg.Weight.ClampedImmobility;
         _attackSpeed.Lerp(immobility);
-        
+
         _health.Lerp(immobility);
         _health.Value = MathF.Floor(_health.Value / 5f) * 5f;
 
@@ -64,6 +64,12 @@ public class VacuumSkirt : ModItem
 
     public override void ModifyTooltips(List<TooltipLine> tooltips)
     {
-        tooltips.FormatLines((_attackSpeed - 1f).Percent(), _health, _defense, _resist.Percent(), (_movePenalty.Value - 1f).Percent());
+        tooltips.FormatLines(
+            (_attackSpeed - 1f).Percent(),
+            _health,
+            _defense,
+            _resist.Percent(),
+            (_movePenalty.Value - 1f).Percent()
+        );
     }
 }

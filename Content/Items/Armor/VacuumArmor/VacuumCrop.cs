@@ -21,7 +21,7 @@ public class VacuumCrop : ModItem
     {
         Item.width = 18;
         Item.height = 18;
-        Item.value = Item.sellPrice(gold: 1);
+        Item.value = Item.sellPrice(gold: 2);
         Item.rare = ItemRarityID.Red;
         Item.defense = 46;
     }
@@ -64,6 +64,12 @@ public class VacuumCrop : ModItem
 
     public override void ModifyTooltips(List<TooltipLine> tooltips)
     {
-        tooltips.FormatLines(_attack.Percent(), _health, _defense, _resist.Percent(), (_movePenalty.Value - 1f).Percent());
+        tooltips.FormatLines(
+            _attack.Percent(),
+            _health,
+            _defense,
+            _resist.Percent(),
+            (_movePenalty.Value - 1f).Percent()
+        );
     }
 }
