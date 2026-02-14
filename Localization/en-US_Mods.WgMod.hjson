@@ -99,7 +99,8 @@ Items: {
 		SetBonus:
 			'''
 			{0} life regenerated per second
-			Losing weight is {1}% harder
+			{1}% increased maximum life
+			Losing weight is {2}% harder
 			'''
 	}
 
@@ -229,6 +230,16 @@ Items: {
 			Effects scale with your obesity
 			'''
 	}
+
+	SlimePie: {
+		DisplayName: Slime Pie
+		Tooltip: A slime Delicacy!
+	}
+
+	Oven: {
+		DisplayName: Oven
+		Tooltip: Used for baking
+	}
 }
 
 Buffs: {
@@ -284,6 +295,16 @@ Buffs: {
 			Decreased movement speed by {0}%
 			Increased damage by {1}%
 			Decreased attack speed by {2}%
+			'''
+	}
+
+	WobWobWobWob: {
+		DisplayName: Wob Wob Wob Wob~
+		Description:
+			'''
+			You feel like slime royalty!
+			Enemies bounce off of you
+			Increased jump height and fall speed
 			'''
 	}
 }
