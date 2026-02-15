@@ -8,6 +8,7 @@ namespace WgMod.Content.Items.Accessories;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [Credit(ProjectRole.Artist, Contributor.trilophyte)]
+[Credit(ProjectRole.Artist, Contributor._d_u_m_m_y_)]
 public class FlaskOfAmbrosia : ModItem
 {
     public override void SetDefaults()
