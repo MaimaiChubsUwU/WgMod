@@ -30,7 +30,7 @@ public static class WgArmor
         BellyTexture = mod.Assets.Request<Texture2D>("Assets/Textures/Belly_ArmorFem");
     }
 
-    public static void Render(ref RenderTarget2D target, ReadOnlySpan<Layer> layers)
+    public static void Render(ref RenderTarget2D target, ReadOnlySpan<Layer> layers, bool male)
     {
         GraphicsDevice device = Main.graphics.GraphicsDevice;
         SpriteBatch spriteBatch = Main.spriteBatch;
@@ -47,6 +47,8 @@ public static class WgArmor
             RasterizerState.CullCounterClockwise,
             UVShader.Value
         );
+        if (UVShader.IsLoaded)
+            UVShader.Value.Parameters["uOffset"].SetValue(male ? new Vector2(0f, -0.5f) : Vector2.Zero);
         foreach (Layer layer in layers)
         {
             if (layer.ArmorTexture == null)
