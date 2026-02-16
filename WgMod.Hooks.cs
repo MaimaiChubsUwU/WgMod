@@ -15,24 +15,24 @@ public partial class WgMod
     // Put general hooks here, specific hooks can be placed in their respective ModPlayer
     public static void RegisterHooks()
     {
-        On_Player.AddBuff += OnPlayer_AddBuff;
-        On_Player.DelBuff += OnPlayer_DelBuff;
-        On_PlayerDrawSet.HeadOnlySetup += OnPlayerDrawSet_HeadOnlySetup;
-        On_Mount.Draw += OnMount_Draw;
-        On_Main.GetPlayerArmPosition += OnMain_GetPlayerArmPosition;
+        On_Player.AddBuff += Player_AddBuff;
+        On_Player.DelBuff += Player_DelBuff;
+        On_PlayerDrawSet.HeadOnlySetup += PlayerDrawSet_HeadOnlySetup;
+        On_Mount.Draw += Mount_Draw;
+        On_Main.GetPlayerArmPosition += Main_GetPlayerArmPosition;
     }
 
     // Always remember to unregister your hooks
     static void UnregisterHooks()
     {
-        On_Player.AddBuff -= OnPlayer_AddBuff;
-        On_Player.DelBuff -= OnPlayer_DelBuff;
-        On_PlayerDrawSet.HeadOnlySetup -= OnPlayerDrawSet_HeadOnlySetup;
-        On_Mount.Draw -= OnMount_Draw;
-        On_Main.GetPlayerArmPosition -= OnMain_GetPlayerArmPosition;
+        On_Player.AddBuff -= Player_AddBuff;
+        On_Player.DelBuff -= Player_DelBuff;
+        On_PlayerDrawSet.HeadOnlySetup -= PlayerDrawSet_HeadOnlySetup;
+        On_Mount.Draw -= Mount_Draw;
+        On_Main.GetPlayerArmPosition -= Main_GetPlayerArmPosition;
     }
 
-    static void OnPlayer_AddBuff(On_Player.orig_AddBuff orig, Player self, int type, int timeToAdd, bool quiet, bool foodHack)
+    static void Player_AddBuff(On_Player.orig_AddBuff orig, Player self, int type, int timeToAdd, bool quiet, bool foodHack)
     {
         if (!self.TryGetModPlayer(out WgPlayer wg))
         {
@@ -65,7 +65,7 @@ public partial class WgMod
         }
     }
 
-    static void OnPlayer_DelBuff(On_Player.orig_DelBuff orig, Player self, int index)
+    static void Player_DelBuff(On_Player.orig_DelBuff orig, Player self, int index)
     {
         if (self.TryGetModPlayer(out WgPlayer wg))
         {
@@ -87,13 +87,13 @@ public partial class WgMod
         orig(self, index);
     }
 
-    static void OnPlayerDrawSet_HeadOnlySetup(On_PlayerDrawSet.orig_HeadOnlySetup orig, ref PlayerDrawSet self, Player drawPlayer2, List<DrawData> drawData, List<int> dust, List<int> gore, float X, float Y, float Alpha, float Scale)
+    static void PlayerDrawSet_HeadOnlySetup(On_PlayerDrawSet.orig_HeadOnlySetup orig, ref PlayerDrawSet self, Player drawPlayer2, List<DrawData> drawData, List<int> dust, List<int> gore, float X, float Y, float Alpha, float Scale)
     {
         orig(ref self, drawPlayer2, drawData, dust, gore, X, Y, Alpha, Scale);
         self.Position.X -= Math.Max((self.drawPlayer.width / 2) - 10, 0);
     }
 
-    static Vector2 OnMain_GetPlayerArmPosition(On_Main.orig_GetPlayerArmPosition orig, Projectile proj)
+    static Vector2 Main_GetPlayerArmPosition(On_Main.orig_GetPlayerArmPosition orig, Projectile proj)
     {
         Player player = Main.player[proj.owner];
         Vector2 vector = Main.OffsetsPlayerOnhand[player.bodyFrame.Y / 56] * 2f;
@@ -111,7 +111,7 @@ public partial class WgMod
         return player.RotatedRelativePoint(pos, false, true);
     }
 
-    static void OnMount_Draw(On_Mount.orig_Draw orig, Mount self, List<DrawData> playerDrawData, int drawType, Player drawPlayer, Vector2 Position, Color drawColor, SpriteEffects playerEffect, float shadow)
+    static void Mount_Draw(On_Mount.orig_Draw orig, Mount self, List<DrawData> playerDrawData, int drawType, Player drawPlayer, Vector2 Position, Color drawColor, SpriteEffects playerEffect, float shadow)
     {
         if (drawPlayer.TryGetModPlayer(out WgPlayer wg) && self.Active)
             Position.Y += WeightValues.DrawOffsetY(wg.Weight.GetStage());
