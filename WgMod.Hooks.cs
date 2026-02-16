@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,6 +17,7 @@ public partial class WgMod
     {
         On_Player.AddBuff += OnPlayer_AddBuff;
         On_Player.DelBuff += OnPlayer_DelBuff;
+        On_PlayerDrawSet.HeadOnlySetup += OnPlayerDrawSet_HeadOnlySetup;
         On_Mount.Draw += OnMount_Draw;
         On_Main.GetPlayerArmPosition += OnMain_GetPlayerArmPosition;
     }
@@ -25,6 +27,7 @@ public partial class WgMod
     {
         On_Player.AddBuff -= OnPlayer_AddBuff;
         On_Player.DelBuff -= OnPlayer_DelBuff;
+        On_PlayerDrawSet.HeadOnlySetup -= OnPlayerDrawSet_HeadOnlySetup;
         On_Mount.Draw -= OnMount_Draw;
         On_Main.GetPlayerArmPosition -= OnMain_GetPlayerArmPosition;
     }
@@ -82,6 +85,12 @@ public partial class WgMod
             }
         }
         orig(self, index);
+    }
+
+    static void OnPlayerDrawSet_HeadOnlySetup(On_PlayerDrawSet.orig_HeadOnlySetup orig, ref PlayerDrawSet self, Player drawPlayer2, List<DrawData> drawData, List<int> dust, List<int> gore, float X, float Y, float Alpha, float Scale)
+    {
+        orig(ref self, drawPlayer2, drawData, dust, gore, X, Y, Alpha, Scale);
+        self.Position.X -= Math.Max((self.drawPlayer.width / 2) - 10, 0);
     }
 
     static Vector2 OnMain_GetPlayerArmPosition(On_Main.orig_GetPlayerArmPosition orig, Projectile proj)
