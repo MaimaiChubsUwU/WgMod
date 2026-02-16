@@ -239,8 +239,8 @@ Items: {
 	Oven: {
 		DisplayName: Oven
 		Tooltip: Used for baking
-  }
-    
+	}
+
 	GuideToLiftingYourFatAss: {
 		DisplayName: Guide to Lifting Your Fat Ass
 		Tooltip: Reduces movement penalty by 50% in exchange for mana
