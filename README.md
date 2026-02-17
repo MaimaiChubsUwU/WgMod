@@ -30,7 +30,3 @@ Currently there are no pre-packaged binaries, so you have to compile the source 
 
 # Credits
 See [description.txt](description.txt)
-
-# TODO
-- Test in multiplayer (most likely broken)
-- Add checks to prevent the server from loading or running unecessary stuff
