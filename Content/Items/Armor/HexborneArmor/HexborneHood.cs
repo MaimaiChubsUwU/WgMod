@@ -8,6 +8,7 @@ using WgMod.Common.Players;
 namespace WgMod.Content.Items.Armor.HexborneArmor;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor._d_u_m_m_y_)]
 [AutoloadEquip(EquipType.Head)]
 public class HexborneHood : ModItem
 {
@@ -20,7 +21,7 @@ public class HexborneHood : ModItem
     public override void SetDefaults()
     {
         Item.width = 22;
-        Item.height = 20;
+        Item.height = 22;
         Item.value = Item.sellPrice(silver: 70);
         Item.rare = ItemRarityID.Orange;
         Item.defense = 5;
