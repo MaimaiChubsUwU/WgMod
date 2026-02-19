@@ -98,13 +98,17 @@ public partial class WgMod
     static Vector2 Main_GetPlayerArmPosition(On_Main.orig_GetPlayerArmPosition orig, Projectile proj)
     {
         Player player = Main.player[proj.owner];
+        float gfx = player.gfxOffY;
+        if (ProjectileID.Sets.IsAWhip[proj.type])
+            gfx = 0f;
+
         Vector2 vector = Main.OffsetsPlayerOnhand[player.bodyFrame.Y / 56] * 2f;
         if (player.direction != 1)
             vector.X = player.bodyFrame.Width - vector.X;
         if (player.gravDir != 1f)
             vector.Y = player.bodyFrame.Height - vector.Y;
         vector -= new Vector2(player.bodyFrame.Width - player.width, player.bodyFrame.Height - player.height) / 2f;
-        Vector2 pos = player.MountedCenter - new Vector2(player.width, player.height) / 2f + vector + Vector2.UnitY * player.gfxOffY;
+        Vector2 pos = player.MountedCenter - new Vector2(player.width, player.height) / 2f + vector + Vector2.UnitY * gfx;
         if (player.mount.Active && player.mount.Type == MountID.Wolf)
         {
             pos.Y -= player.mount.PlayerOffsetHitbox;
