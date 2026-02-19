@@ -18,20 +18,26 @@ public class HellsBeesBuff : ModBuff
     }
 }
 
+[Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
+[Credit(ProjectRole.Artist, Contributor.sinnerdrip)]
 public class HellishBee : ModProjectile
 {
-    public int _weightProgress = 1;
-    public int _weightStage = 1;
-    public float _speedModifier;
-    public float _damageModifier;
+    public const int StageCount = 4;
+    public const int MaxStage = StageCount - 1;
+
+    int _weightProgress;
+    int _weightStage;
+    int _flyFrame;
+
+    float _speedModifier;
+    float _damageModifier;
 
     public override void SetStaticDefaults()
     {
         Main.projFrames[Type] = 8;
-        ProjectileID.Sets.MinionTargettingFeature[Type] = true;
-
         Main.projPet[Type] = true;
 
+        ProjectileID.Sets.MinionTargettingFeature[Type] = true;
         ProjectileID.Sets.CultistIsResistantTo[Type] = true;
     }
 
@@ -51,28 +57,22 @@ public class HellishBee : ModProjectile
     public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
     {
         int CrispyDebuff = ModContent.BuffType<CrispyDebuff>();
-
-        if (target.HasBuff(CrispyDebuff) && _weightStage < 4)
+        if (target.HasBuff(CrispyDebuff) && _weightStage < MaxStage)
         {
             target.DelBuff(target.FindBuffIndex(CrispyDebuff));
-
             _weightProgress++;
-
-            if (_weightProgress == 4)
+            if (_weightProgress >= 3)
             {
-                _weightProgress = 1;
-
+                _weightProgress = 0;
                 _weightStage++;
             }
         }
-
-        Projectile.scale = float.Lerp(1f, 1.1f, _weightStage);
+        Projectile.scale = float.Lerp(1f, 1.1f, _weightStage / (float)MaxStage);
     }
 
     public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
     {
-        _damageModifier = float.Lerp(1, 2, _weightStage);
-
+        _damageModifier = float.Lerp(1, 2, _weightStage / (float)MaxStage);
         modifiers.SourceDamage *= _damageModifier;
     }
 
@@ -89,55 +89,27 @@ public class HellishBee : ModProjectile
     public override void AI()
     {
         Player owner = Main.player[Projectile.owner];
-
         if (!CheckActive(owner))
-        {
             return;
-        }
-
-        GeneralBehavior(
-            owner,
-            out Vector2 vectorToIdlePosition,
-            out float distanceToIdlePosition
-        );
-        SearchForTargets(
-            owner,
-            out bool foundTarget,
-            out float distanceFromTarget,
-            out Vector2 targetCenter
-        );
-        Movement(
-            foundTarget,
-            distanceFromTarget,
-            targetCenter,
-            distanceToIdlePosition,
-            vectorToIdlePosition
-        );
+        GeneralBehavior(owner, out Vector2 vectorToIdlePosition, out float distanceToIdlePosition);
+        SearchForTargets(owner, out bool foundTarget, out float distanceFromTarget, out Vector2 targetCenter);
+        Movement(foundTarget, distanceFromTarget, targetCenter, distanceToIdlePosition, vectorToIdlePosition);
         Visuals();
     }
 
-    private bool CheckActive(Player owner)
+    bool CheckActive(Player owner)
     {
         if (owner.dead || !owner.active)
         {
             owner.ClearBuff(ModContent.BuffType<HellsBeesBuff>());
-
             return false;
         }
-
         if (owner.HasBuff(ModContent.BuffType<HellsBeesBuff>()))
-        {
             Projectile.timeLeft = 2;
-        }
-
         return true;
     }
 
-    private void GeneralBehavior(
-        Player owner,
-        out Vector2 vectorToIdlePosition,
-        out float distanceToIdlePosition
-    )
+    void GeneralBehavior(Player owner, out Vector2 vectorToIdlePosition, out float distanceToIdlePosition)
     {
         Vector2 idlePosition = owner.Center;
         idlePosition.Y -= 48f;
@@ -156,44 +128,28 @@ public class HellishBee : ModProjectile
         }
 
         float overlapVelocity = 0.04f;
-
         foreach (var other in Main.ActiveProjectiles)
         {
-            if (
-                other.whoAmI != Projectile.whoAmI
+            if (other.whoAmI != Projectile.whoAmI 
                 && other.owner == Projectile.owner
                 && Math.Abs(Projectile.position.X - other.position.X)
-                    + Math.Abs(Projectile.position.Y - other.position.Y)
-                    < Projectile.width
-            )
+                + Math.Abs(Projectile.position.Y - other.position.Y)
+                < Projectile.width)
             {
                 if (Projectile.position.X < other.position.X)
-                {
                     Projectile.velocity.X -= overlapVelocity;
-                }
                 else
-                {
                     Projectile.velocity.X += overlapVelocity;
-                }
 
                 if (Projectile.position.Y < other.position.Y)
-                {
                     Projectile.velocity.Y -= overlapVelocity;
-                }
                 else
-                {
                     Projectile.velocity.Y += overlapVelocity;
-                }
             }
         }
     }
 
-    private void SearchForTargets(
-        Player owner,
-        out bool foundTarget,
-        out float distanceFromTarget,
-        out Vector2 targetCenter
-    )
+    void SearchForTargets(Player owner, out bool foundTarget, out float distanceFromTarget, out Vector2 targetCenter)
     {
         distanceFromTarget = 700f;
         targetCenter = Projectile.position;
@@ -231,10 +187,7 @@ public class HellishBee : ModProjectile
                     );
                     bool closeThroughWall = between < 100f;
 
-                    if (
-                        ((closest && inRange) || !foundTarget)
-                        && (lineOfSight || closeThroughWall)
-                    )
+                    if (((closest && inRange) || !foundTarget) && (lineOfSight || closeThroughWall))
                     {
                         distanceFromTarget = between;
                         targetCenter = npc.Center;
@@ -243,19 +196,12 @@ public class HellishBee : ModProjectile
                 }
             }
         }
-
         Projectile.friendly = foundTarget;
     }
 
-    private void Movement(
-        bool foundTarget,
-        float distanceFromTarget,
-        Vector2 targetCenter,
-        float distanceToIdlePosition,
-        Vector2 vectorToIdlePosition
-    )
+    void Movement(bool foundTarget, float distanceFromTarget, Vector2 targetCenter, float distanceToIdlePosition, Vector2 vectorToIdlePosition)
     {
-        _speedModifier = float.Lerp(1f, 2f, _weightStage);
+        _speedModifier = float.Lerp(1f, 2f, _weightStage / (float)MaxStage);
 
         float speed = 8f / _speedModifier;
         float inertia = 20f / _speedModifier;
@@ -268,8 +214,7 @@ public class HellishBee : ModProjectile
                 direction.Normalize();
                 direction *= speed;
 
-                Projectile.velocity =
-                    (Projectile.velocity * (inertia - 1) + direction) / inertia;
+                Projectile.velocity = (Projectile.velocity * (inertia - 1) + direction) / inertia;
             }
         }
         else
@@ -289,8 +234,7 @@ public class HellishBee : ModProjectile
             {
                 vectorToIdlePosition.Normalize();
                 vectorToIdlePosition *= speed;
-                Projectile.velocity =
-                    (Projectile.velocity * (inertia - 1) + vectorToIdlePosition) / inertia;
+                Projectile.velocity = (Projectile.velocity * (inertia - 1) + vectorToIdlePosition) / inertia;
             }
             else if (Projectile.velocity == Vector2.Zero)
             {
@@ -300,32 +244,25 @@ public class HellishBee : ModProjectile
         }
     }
 
-    private void Visuals()
+    void Visuals()
     {
         Projectile.rotation = Projectile.velocity.X * 0.05f;
 
         if (Projectile.velocity.X > 0)
-        {
             Projectile.spriteDirection = -1;
-        }
         else
-        {
             Projectile.spriteDirection = 1;
-        }
 
-        int frameSpeed = 5;
-
+        const int flyFrameSpeed = 5;
         Projectile.frameCounter++;
 
-        if (Projectile.frameCounter >= frameSpeed)
+        if (Projectile.frameCounter >= flyFrameSpeed)
         {
-            Projectile.frameCounter = 0;
-            Projectile.frame++;
+            _flyFrame++;
+            _flyFrame %= 2;
 
-            if (Projectile.frame >= Main.projFrames[Type])
-            {
-                Projectile.frame = 0;
-            }
+            Projectile.frameCounter = 0;
+            Projectile.frame = _weightStage * 2 + _flyFrame;
         }
 
         Lighting.AddLight(Projectile.Center, Color.White.ToVector3() * 0.78f);
