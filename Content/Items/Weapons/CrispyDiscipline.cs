@@ -12,9 +12,9 @@ namespace WgMod.Content.Items.Weapons;
 [Credit(ProjectRole.Artist, Contributor.sinnerdrip)]
 public class CrispyDiscipline : ModItem
 {
-    WgStat _damage = new(25, 35);
+    WgStat _damage = new(1f, 1.4f);
     WgStat _attackSpeed = new(30, 40);
-    WgStat _knockback = new(1.5f, 3f);
+    WgStat _knockback = new(1f, 2f);
 
     public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(CrispyDebuff.TagDamage);
 
@@ -24,8 +24,8 @@ public class CrispyDiscipline : ModItem
         Item.height = 34;
 
         Item.DamageType = DamageClass.SummonMeleeSpeed;
-        Item.damage = 30;
-        Item.knockBack = 2;
+        Item.damage = 25;
+        Item.knockBack = 1.5f;
         Item.rare = ItemRarityID.Green;
 
         Item.shoot = ModContent.ProjectileType<CrispyDisciplineProjectile>();
@@ -48,10 +48,18 @@ public class CrispyDiscipline : ModItem
         _attackSpeed.Lerp(immobility);
         _knockback.Lerp(immobility);
 
-        Item.damage = _damage;
         Item.useTime = _attackSpeed;
         Item.useAnimation = _attackSpeed;
-        Item.knockBack = _knockback;
+    }
+
+    public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+    {
+        damage *= _damage;
+    }
+
+    public override void ModifyWeaponKnockback(Player player, ref StatModifier knockback)
+    {
+        knockback *= _knockback;
     }
 
     public override void AddRecipes()
