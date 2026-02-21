@@ -124,13 +124,13 @@ public partial class WgPlayer : ModPlayer
         // Ice break
         if (stage >= Weight.HeavyStage)
         {
-            const int IceBreakTime = 60;
+            const int iceBreakTime = 60;
             if (Player.velocity.Y > -0.01f && HasIceBelow())
             {
-                if (_iceBreakTimer == IceBreakTime / 2)
+                if (_iceBreakTimer == iceBreakTime / 2)
                     SoundEngine.PlaySound(SoundID.Item127);
                 _iceBreakTimer++;
-                if (_iceBreakTimer > IceBreakTime)
+                if (_iceBreakTimer > iceBreakTime)
                     ThinIceBreak();
             }
             else

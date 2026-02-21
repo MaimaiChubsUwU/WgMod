@@ -14,7 +14,7 @@ public class Treadmill : ModTile
 {
     public const float WeightLoss = 80f;
     public const int NextStyleHeight = 38;
-    
+
     public override void SetStaticDefaults()
     {
         Main.tileFrameImportant[Type] = true;
@@ -29,7 +29,7 @@ public class Treadmill : ModTile
         TileObjectData.newTile.CoordinateHeights = [16, 18];
         TileObjectData.newTile.CoordinatePaddingFix = new Point16(0, -2);
         TileObjectData.addTile(Type);
-        
+
         AddMapEntry(new Color(191, 142, 111), Mod.GetLocalization("Items.Treadmill.DisplayName"));
     }
 
