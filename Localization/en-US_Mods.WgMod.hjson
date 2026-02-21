@@ -269,6 +269,11 @@ Items: {
 			Effects scale with your obesity
 			'''
 	}
+
+	MeteorCrush: {
+		DisplayName: Meteor Crush
+		Tooltip: "TODO"
+	}
 }
 
 Buffs: {
@@ -416,4 +421,6 @@ InfoDisplays.PortableScale_InfoDisplay.DisplayName: Current weight
 Projectiles: {
 	CrispyDisciplineProjectile.DisplayName: Crispy Discipline
 	HellishBee.DisplayName: Hellish Bee
+	Girth.DisplayName: Girth
+	Girthquake.DisplayName: Girthquake
 }
