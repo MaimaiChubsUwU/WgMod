@@ -20,7 +20,8 @@ public enum ProjectRole
 {
     Programmer,
     Artist,
-    VisualProgrammer
+    VFX,
+    SFX
 }
 
 public enum Contributor
@@ -47,6 +48,8 @@ public static class Credits
     {
         ProjectRole.Programmer => ItemID.ArtisanLoaf,
         ProjectRole.Artist => ItemID.PaintRoller,
+        ProjectRole.VFX => ItemID.HallowBossDye,
+        ProjectRole.SFX => ItemID.Megaphone,
         _ => ItemID.None
     };
 
