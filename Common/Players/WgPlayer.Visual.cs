@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -18,7 +17,6 @@ public partial class WgPlayer
 
     internal readonly WgArmor.Layer[] _armorLayers = new WgArmor.Layer[2];
     internal RenderTarget2D _armorTarget;
-    internal int _lastBodySlot;
 
     void InitializeVisuals()
     {
@@ -77,51 +75,13 @@ public partial class WgPlayer
     public override void HideDrawLayers(PlayerDrawSet drawInfo)
     {
         int stage = Weight.GetStage();
-        if (stage >= 5)
-        {
-            foreach (PlayerDrawLayer drawLayer in PlayerDrawLayerLoader.Layers)
-            {
-                if (drawLayer == PlayerDrawLayers.Skin || drawLayer == PlayerDrawLayers.Torso || drawLayer == PlayerDrawLayers.Leggings)
-                    drawLayer.Hide();
-            }
-        }
-    }
-
-    // Being used as a PreDraw kind of thing
-    public override void ModifyDrawInfo(ref PlayerDrawSet drawInfo)
-    {
-        if (drawInfo.shadow == 0f)
-        {
-            _lastBodySlot = Player.body;
-            int stage = Weight.GetStage();
-            int armStage = WeightValues.GetArmStage(stage);
-            if (armStage >= 0)
-            {
-                Player.body = WgArms.GetArmEquipSlot(Mod, armStage);
-                drawInfo.armorHidesArms = true;
-                drawInfo.armorHidesHands = true;
-            }
-        }
-    }
-
-    public override void TransformDrawData(ref PlayerDrawSet drawInfo)
-    {
-        // Sticking with this for now...
-        int stage = Weight.GetStage();
         int armStage = WeightValues.GetArmStage(stage);
-        if (armStage >= 0)
+        foreach (PlayerDrawLayer drawLayer in PlayerDrawLayerLoader.Layers)
         {
-            Texture2D armTexture = WgArms.ArmTextures[armStage].Value;
-            foreach (ref DrawData data in CollectionsMarshal.AsSpan(drawInfo.DrawDataCache))
-            {
-                if (data.texture == armTexture)
-                {
-                    data.color = drawInfo.colorBodySkin;
-                    data.shader = 0;
-                }
-            }
+            if (drawLayer == PlayerDrawLayers.ArmOverItem && armStage >= 0)
+                drawLayer.Hide();
+            else if ((drawLayer == PlayerDrawLayers.Skin || drawLayer == PlayerDrawLayers.Torso || drawLayer == PlayerDrawLayers.Leggings) && stage >= 5)
+                drawLayer.Hide();
         }
-        if (drawInfo.shadow == 0f)
-            Player.body = _lastBodySlot;
     }
 }
