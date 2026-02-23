@@ -19,10 +19,10 @@ partial class WgMod
         switch (type)
         {
             case MessageType.WgPlayerSync:
-					WgPlayer player = Main.player[reader.ReadByte()].GetModPlayer<WgPlayer>();
-					player.ReceivePlayerSync(reader);
-					if (Main.netMode == NetmodeID.Server) // Forward the changes to the other clients
-						player.SyncPlayer(-1, whoAmI, false);
+                WgPlayer player = Main.player[reader.ReadByte()].GetModPlayer<WgPlayer>();
+                player.ReceivePlayerSync(reader);
+                if (Main.netMode == NetmodeID.Server) // Forward the changes to the other clients
+                    player.SyncPlayer(-1, whoAmI, false);
                 break;
             default:
                 Logger.WarnFormat("WgMod: Unknown Message type: {0}", type);

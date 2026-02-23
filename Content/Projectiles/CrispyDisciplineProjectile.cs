@@ -15,7 +15,7 @@ namespace WgMod.Content.Projectiles;
 
 [Credit(ProjectRole.Programmer, Contributor.maimaichubs)]
 [Credit(ProjectRole.Artist, Contributor.sinnerdrip)]
-[Credit(ProjectRole.VisualProgrammer, Contributor.follycake)]
+[Credit(ProjectRole.VFX, Contributor.follycake)]
 public class CrispyDisciplineProjectile : ModProjectile
 {
     public int _beeDamage;

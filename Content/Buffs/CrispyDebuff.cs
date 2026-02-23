@@ -21,23 +21,17 @@ public class CrispyDebuff : ModBuff
 
     public override void Update(NPC npc, ref int buffIndex)
     {
-        int _dustRate = 15;
-        if (Main.rand.NextBool(_dustRate))
-        {
+        int dustRate = 15;
+        if (Main.rand.NextBool(dustRate))
             Dust.NewDust(npc.position, npc.width, npc.height, DustID.t_Honey, 0f, 0.5f, 150, new Color(151, 93, 15), 1.3f);
-        }
-
         npc.GetGlobalNPC<CrispyDebuffNPC>().Caramelized = true;
     }
 
     public override void Update(Player player, ref int buffIndex)
     {
-        int _dustRate = 15;
-        if (Main.rand.NextBool(_dustRate))
-        {
+        int dustRate = 15;
+        if (Main.rand.NextBool(dustRate))
             Dust.NewDust(player.position, player.width, player.height, DustID.t_Honey, 0f, 0.5f, 150, new Color(151, 93, 15), 1.3f);
-        }
-
         player.GetModPlayer<CrispyDebuffPlayer>().Caramelized = true;
     }
 }

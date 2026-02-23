@@ -284,6 +284,11 @@ Items: {
 			Your attacks are accompanied by multiple magical tomes at half power
 			Effects scale with your obesity
 			'''
+  }
+  
+	MeteorCrush: {
+		DisplayName: Meteor Crush
+		Tooltip: Makes your weight able to crush your enemies
 	}
 }
 
@@ -398,7 +403,11 @@ Configs: {
 
 	WgClientConfig: {
 		DisplayName: Wg Client Config
-		Headers.Visual: Visual settings
+
+		Headers: {
+			General: General settings
+			Visual: Visual settings
+		}
 
 		DisableJiggle: {
 			Label: Disable Jiggle
@@ -414,6 +423,11 @@ Configs: {
 			Label: Show Credits
 			Tooltip: Shows credits on tooltips
 		}
+
+		DisableWeightGain: {
+			Label: Disable Weight Gain
+			Tooltip: Disables gaining weight of any kind
+		}
 	}
 }
 
@@ -423,4 +437,6 @@ InfoDisplays.PortableScale_InfoDisplay.DisplayName: Current weight
 Projectiles: {
 	CrispyDisciplineProjectile.DisplayName: Crispy Discipline
 	HellishBee.DisplayName: Hellish Bee
+	Girth.DisplayName: Girth
+	Girthquake.DisplayName: Girthquake
 }

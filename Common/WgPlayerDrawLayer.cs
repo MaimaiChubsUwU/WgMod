@@ -19,18 +19,10 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
     public static Asset<Texture2D> BaseTexture { get; private set; }
     public static Asset<Texture2D> BellyTexture { get; private set; }
 
-    public override void SetStaticDefaults()
-    {
-        if (Main.dedServ)
-            return;
-        WgArms.SetupDrawing(Mod);
-    }
-
     public override void Load()
     {
         if (Main.dedServ)
             return;
-        WgArms.Load(Mod);
         WgArmor.Load(Mod);
         BaseTexture = Mod.Assets.Request<Texture2D>("Assets/Textures/Base");
         BellyTexture = Mod.Assets.Request<Texture2D>("Assets/Textures/Belly");
@@ -42,7 +34,6 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
 
     public static void SetupArmorLayers(WgPlayer wg)
     {
-        wg._lastBodySlot = wg.Player.body;
         PlayerDrawSet drawInfo = new()
         {
             drawPlayer = wg.Player,
@@ -57,8 +48,8 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
     public static void SetupArmorLayers(WgPlayer wg, in PlayerDrawSet drawInfo)
     {
         Array.Clear(wg._armorLayers);
-        if (wg._lastBodySlot > 0)
-            wg._armorLayers[0] = new(TextureAssets.ArmorBodyComposite[wg._lastBodySlot], drawInfo.colorArmorBody);
+        if (drawInfo.drawPlayer.body > 0)
+            wg._armorLayers[0] = new(TextureAssets.ArmorBodyComposite[drawInfo.drawPlayer.body], drawInfo.colorArmorBody);
         else
         {
             wg._armorLayers[0] = new(TextureAssets.Players[drawInfo.skinVar, 4], drawInfo.colorUnderShirt);
@@ -113,7 +104,7 @@ public class WgPlayerDrawLayer : PlayerDrawLayer
         float baseSquish = (bellySquish + 1f) * 0.5f;
 
         bool drawArmor = !WgClientConfig.Instance.DisableUVClothes;
-        if (drawInfo.shadow != 0f && wg._lastBodySlot <= 0)
+        if (drawInfo.shadow != 0f && player.body <= 0)
             drawArmor = false;
         if (drawArmor)
             SetupArmorLayers(wg, drawInfo);

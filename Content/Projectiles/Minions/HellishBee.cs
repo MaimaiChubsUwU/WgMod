@@ -57,10 +57,10 @@ public class HellishBee : ModProjectile
 
     public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
     {
-        int CrispyDebuff = ModContent.BuffType<CrispyDebuff>();
-        if (target.HasBuff(CrispyDebuff) && _weightStage < MaxStage)
+        int crispyDebuff = ModContent.BuffType<CrispyDebuff>();
+        if (target.HasBuff(crispyDebuff) && _weightStage < MaxStage)
         {
-            target.DelBuff(target.FindBuffIndex(CrispyDebuff));
+            target.DelBuff(target.FindBuffIndex(crispyDebuff));
             _weightProgress++;
 
             SoundEngine.PlaySound(
